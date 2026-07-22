@@ -144,3 +144,45 @@ The automated test suite can be started with:
 
 ```bash
 npm test
+```
+
+The Windows release packages can be built with:
+
+```bash
+npm run release:win
+```
+
+## Code signing
+
+The current RC4 executables are unsigned.
+
+The intended release-signing and approval process is documented in:
+
+[CODE_SIGNING_POLICY.md](CODE_SIGNING_POLICY.md)
+
+Locally built binaries are not intended to be submitted as official signed
+public releases.
+
+## License
+
+The Avelune Enhance application source is licensed under the GNU Affero
+General Public License v3.0.
+
+See:
+
+[LICENSE](LICENSE)
+
+Third-party libraries, native components and AI models remain subject to their
+respective licenses and notices.
+
+## Release files
+
+Official preview and release artifacts are published through GitHub Releases.
+
+Each release should include:
+
+- Windows Setup
+- Portable Windows executable
+- Application Source Snapshot
+- Native Engine Corresponding Source
+- SHA-256 checksum list
