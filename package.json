@@ -1,0 +1,118 @@
+{
+  "name": "avelune-enhance",
+  "private": true,
+  "version": "2.0.0-rc.4",
+  "productName": "Avelune Enhance",
+  "description": "Local GPU-accelerated AI image enhancement studio for Windows.",
+  "author": {
+    "name": "Avelune Project"
+  },
+  "license": "AGPL-3.0-only",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.js",
+    "dist:win": "electron-builder --win nsis portable --x64",
+    "pack:win": "electron-builder --win dir --x64",
+    "release:win": "electron-builder --win nsis portable --x64 --publish never",
+    "manifest:resources": "node tools/generate-resource-manifest.js",
+    "verify:resources": "node tools/verify-resource-manifest.js",
+    "verify": "npm run verify:resources && npm test"
+  },
+  "devDependencies": {
+    "electron": "43.1.1",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "studio.avelune.enhance",
+    "productName": "Avelune Enhance",
+    "copyright": "Copyright © 2026 Avelune Project",
+    "asar": true,
+    "asarUnpack": [],
+    "files": [
+      "src/**/*",
+      "renderer/**/*",
+      "package.json",
+      "LICENSE",
+      "README.md",
+      "BUILDING.md",
+      "SECURITY.md",
+      "PRIVACY.md",
+      "MODEL_PROVENANCE.md",
+      "THIRD_PARTY_NOTICES.md",
+      "CHANGELOG.md",
+      "NATIVE_ENGINE_SOURCE.md",
+      "NATIVE_ENGINE_SOURCE.json"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/win/bin",
+        "to": "bin"
+      },
+      {
+        "from": "resources/models",
+        "to": "models"
+      },
+      {
+        "from": "resources/resource-manifest.json",
+        "to": "resource-manifest.json"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "renderer/out/assets/icon-512.png",
+      "executableName": "Avelune Enhance",
+      "legalTrademarks": "Avelune",
+      "requestedExecutionLevel": "asInvoker",
+      "detectUpdateChannel": false
+    },
+    "nsis": {
+      "artifactName": "Avelune-Enhance-2.0.0-RC4-Setup-${arch}.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Avelune Enhance",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true,
+      "displayLanguageSelector": false,
+      "differentialPackage": true
+    },
+    "portable": {
+      "artifactName": "Avelune-Enhance-2.0.0-RC4-Portable-${arch}.${ext}"
+    },
+    "electronFuses": {
+      "runAsNode": false,
+      "enableCookieEncryption": true,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true
+    },
+    "compression": "normal",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "electronUpdaterCompatibility": ">=2.16",
+    "generateUpdatesFilesForAllChannels": true,
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://avelune.sayqq.ru/updates/",
+        "channel": "rc",
+        "useMultipleRangeRequest": false
+      }
+    ]
+  },
+  "buildVersion": "2.0.0.4",
+  "homepage": "https://avelune.sayqq.ru/",
+  "dependencies": {
+    "electron-updater": "6.8.9"
+  }
+}

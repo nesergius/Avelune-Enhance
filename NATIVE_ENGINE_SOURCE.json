@@ -1,0 +1,39 @@
+﻿{
+    "SchemaVersion":  2,
+    "Candidate":  "Avelune Enhance 2.0.0 RC4 preparation",
+    "UpstreamRepository":  "https://github.com/upscayl/upscayl-ncnn",
+    "UpstreamRelease":  "upscayl-bin-20240601-103425",
+    "UpstreamCommit":  "22774bc42e2bc3c785b5b585d213d960b1348ad5",
+    "UpstreamOfficialWindowsSha256":  "704fd622984220c8c646a8dff4c7eba1cc62fbb8c47383996f38571f76b73fbf",
+    "CurrentEngineSha256":  "111cb3ec6b4fdf93cd92e8915d12b17f0e70bf73089e930345d216e4f974fe90",
+    "SourceCloneComplete":  true,
+    "SubmodulesInitialized":  true,
+    "BinaryComparisonComplete":  true,
+    "BinaryClassification":  "NonCodeDataChanged",
+    "ChangedByteCount":  32,
+    "ChangedRangeCount":  4,
+    "ChangedSection":  ".rdata",
+    "CodeSectionChanged":  false,
+    "TransformationReproducible":  true,
+    "BinaryPatch":  "native-engine-source/avelune-engine.binary-patch.json",
+    "BinaryPatchSha256":  "e2d922b6141d30467cccc662e8243412d983397300275c395be4ebbbe81435e1",
+    "SourcePatch":  "native-engine-source/avelune-engine-source.patch",
+    "SourcePatchSha256":  "25717247426168a95c8df813afe5c11cff1c358881392a1d4201747294571aaa",
+    "ModifiedSourceFiles":  [
+                                "src/main.cpp"
+                            ],
+    "AveluneModificationSourceComplete":  true,
+    "CorrespondingSourceComplete":  true,
+    "CorrespondingSourceArchive":  "native-engine-source/Avelune-Native-Engine-Corresponding-Source-2.0.0-RC4.zip",
+    "CorrespondingSourceArchiveSha256":  "0ad6ea852920d6f3e6e30ad6350b34faf03f6f47239cff69ed69ade740d4b186",
+    "CorrespondingSourceManifest":  "native-engine-source/corresponding-source/Avelune-Native-Engine-Source-22774bc42e2bc3c785b5b585d213d960b1348ad5/SOURCE_MANIFEST.json",
+    "BuildInstructions":  "native-engine-source/REBUILD-AVELUNE-ENGINE.md",
+    "ModificationDocumentation":  "native-engine-source/AVELUNE_ENGINE_MODIFICATIONS.md",
+    "PublicReleaseApproved":  false,
+    "RemainingReleaseBlockers":  [
+                                     "Build fresh RC4 artifacts and a new source snapshot.",
+                                     "Sign Setup and Portable executables with Authenticode before public mass release.",
+                                     "Complete independent multi-engine scans for the exact final RC4 hashes."
+                                 ],
+    "CompletedAt":  "2026-07-23T01:35:15.5391002+05:00"
+}

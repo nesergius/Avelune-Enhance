@@ -1,0 +1,38 @@
+﻿{
+    "SchemaVersion":  1,
+    "Description":  "Deterministic transformation from the official Upscayl NCNN Windows binary to the tested Avelune RC3 engine binary.",
+    "BaseFile":  "upscayl-bin.exe",
+    "BaseBytes":  6467072,
+    "BaseSha256":  "704fd622984220c8c646a8dff4c7eba1cc62fbb8c47383996f38571f76b73fbf",
+    "TargetFile":  "avelune-engine.exe",
+    "TargetBytes":  6467072,
+    "TargetSha256":  "111cb3ec6b4fdf93cd92e8915d12b17f0e70bf73089e930345d216e4f974fe90",
+    "SameLength":  true,
+    "ChangedByteCount":  32,
+    "Ranges":  [
+                   {
+                       "offset":  4578519,
+                       "length":  7,
+                       "beforeBase64":  "dXBzY2F5bA==",
+                       "afterBase64":  "YXZlbHVuZQ=="
+                   },
+                   {
+                       "offset":  4581609,
+                       "length":  4,
+                       "beforeBase64":  "8J+ZjA==",
+                       "afterBase64":  "W09LXQ=="
+                   },
+                   {
+                       "offset":  4581614,
+                       "length":  13,
+                       "beforeBase64":  "VXBzY2F5bGVkIFN1Yw==",
+                       "afterBase64":  "QXZlbHVuZSB0YXNrIA=="
+                   },
+                   {
+                       "offset":  4581628,
+                       "length":  8,
+                       "beforeBase64":  "ZXNzZnVsbHk=",
+                       "afterBase64":  "b21wbGV0ZWQ="
+                   }
+               ]
+}

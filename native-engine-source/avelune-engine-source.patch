@@ -1,0 +1,22 @@
+diff --git a/src/main.cpp b/src/main.cpp
+index 9d44c3d..f325310 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -197,7 +197,7 @@ static bool parse_optarg_resize(const char *optarg, int *width, int *height, int
+ 
+ static void print_usage()
+ {
+-    fprintf(stderr, "Usage: upscayl-bin -i infile -o outfile [options]...\n\n");
++    fprintf(stderr, "Usage: avelune-bin -i infile -o outfile [options]...\n\n");
+     fprintf(stderr, "  -h                   show this help\n");
+     fprintf(stderr, "  -i input-path        input image path (jpg/png/webp) or directory\n");
+     fprintf(stderr, "  -o output-path       output image path (jpg/png/webp) or directory\n");
+@@ -645,7 +645,7 @@ void *save(void *args)
+         if (success)
+         {
+             fprintf(stderr, "100.00%\n");
+-            fprintf(stderr, "\n🙌 Upscayled Successfully!\n");
++            fprintf(stderr, "\n[OK] Avelune task completed!\n");
+ 
+             if (verbose)
+             {
