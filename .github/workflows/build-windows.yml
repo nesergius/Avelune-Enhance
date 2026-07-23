@@ -1,0 +1,168 @@
+name: Windows build and validation
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: windows-build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate source and tests
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.x"
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Generate resource manifest
+        run: npm run manifest:resources
+
+      - name: Verify resource manifest
+        run: npm run verify:resources
+
+      - name: Run automated tests
+        run: npm test
+
+  package-windows:
+    name: Build unsigned Windows artifacts
+    needs: validate
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: "false"
+
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.x"
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Generate resource manifest
+        run: npm run manifest:resources
+
+      - name: Verify resource manifest
+        run: npm run verify:resources
+
+      - name: Run automated tests before packaging
+        run: npm test
+
+      - name: Build unsigned Setup and Portable packages
+        run: npm run release:win
+
+      - name: Verify expected Windows artifacts
+        shell: pwsh
+        run: |
+          $setup = Get-ChildItem -LiteralPath dist -File |
+            Where-Object { $_.Name -match '^Avelune-Enhance-.+-Setup-x64[.]exe$' }
+
+          $portable = Get-ChildItem -LiteralPath dist -File |
+            Where-Object { $_.Name -match '^Avelune-Enhance-.+-Portable-x64[.]exe$' }
+
+          $blockmap = Get-ChildItem -LiteralPath dist -File |
+            Where-Object { $_.Name -match '^Avelune-Enhance-.+-Setup-x64[.]exe[.]blockmap$' }
+
+          $metadata = Join-Path $PWD 'dist\rc.yml'
+
+          if (@($setup).Count -ne 1) {
+            throw "Expected exactly one Setup executable; found $(@($setup).Count)."
+          }
+          if (@($portable).Count -ne 1) {
+            throw "Expected exactly one Portable executable; found $(@($portable).Count)."
+          }
+          if (@($blockmap).Count -ne 1) {
+            throw "Expected exactly one Setup blockmap; found $(@($blockmap).Count)."
+          }
+          if (-not (Test-Path -LiteralPath $metadata -PathType Leaf)) {
+            throw "Expected update metadata is missing: $metadata"
+          }
+
+          foreach ($file in @($setup[0], $portable[0])) {
+            $signature = Get-AuthenticodeSignature -LiteralPath $file.FullName
+            if ($signature.Status -ne [System.Management.Automation.SignatureStatus]::NotSigned) {
+              throw "Unsigned build stage expected NotSigned for $($file.Name), found $($signature.Status)."
+            }
+          }
+
+          Write-Host "[PASS] Setup: $($setup[0].Name)"
+          Write-Host "[PASS] Portable: $($portable[0].Name)"
+          Write-Host "[PASS] Blockmap: $($blockmap[0].Name)"
+          Write-Host "[PASS] Metadata: rc.yml"
+          Write-Host "[PASS] Executables are intentionally unsigned before SignPath."
+
+      - name: Create SHA-256 checksum list
+        shell: pwsh
+        run: |
+          $files = Get-ChildItem -LiteralPath dist -File |
+            Where-Object {
+              $_.Name -match '^Avelune-Enhance-.+-(Setup|Portable)-x64[.]exe$' -or
+              $_.Name -match '^Avelune-Enhance-.+-Setup-x64[.]exe[.]blockmap$' -or
+              $_.Name -eq 'rc.yml'
+            } |
+            Sort-Object Name
+
+          if (@($files).Count -lt 4) {
+            throw "Expected at least four release files; found $(@($files).Count)."
+          }
+
+          $lines = foreach ($file in $files) {
+            $hash = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+            "$hash  $($file.Name)"
+          }
+
+          $checksumPath = Join-Path $PWD 'dist\SHA256SUMS.txt'
+          $lines | Set-Content -LiteralPath $checksumPath -Encoding ascii
+          Get-Content -LiteralPath $checksumPath
+
+      - name: Upload unsigned Windows build artifact
+        id: upload-unsigned-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: avelune-windows-unsigned-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            dist/Avelune-Enhance-*-Setup-x64.exe
+            dist/Avelune-Enhance-*-Portable-x64.exe
+            dist/Avelune-Enhance-*-Setup-x64.exe.blockmap
+            dist/rc.yml
+            dist/SHA256SUMS.txt
+
+      - name: Report GitHub artifact metadata
+        shell: pwsh
+        run: |
+          Write-Host "Artifact ID: ${{ steps.upload-unsigned-artifact.outputs.artifact-id }}"
+          Write-Host "Artifact URL: ${{ steps.upload-unsigned-artifact.outputs.artifact-url }}"
+          Write-Host "Artifact digest: ${{ steps.upload-unsigned-artifact.outputs.artifact-digest }}"
