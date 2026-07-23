@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "24.x"
           cache: npm
@@ -62,7 +62,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "24.x"
           cache: npm
@@ -148,7 +148,7 @@ jobs:
 
       - name: Upload unsigned Windows build artifact
         id: upload-unsigned-artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: avelune-windows-unsigned-${{ github.sha }}
           if-no-files-found: error
