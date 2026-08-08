@@ -1,7 +1,5 @@
 # Avelune Enhance 2.0.0 RC6 — release notes
 
-RC6 переводит Avelune от преимущественно интерфейсного обновления к функциональному релизу качества и производительности.
-
 ## English summary
 
 RC6 turns Avelune Enhance into a local Windows AI image enhancement and restoration release focused on practical image quality, clear profiles and private local processing.
@@ -12,7 +10,9 @@ RC6 turns Avelune Enhance into a local Windows AI image enhancement and restorat
 - The adaptive Before/After viewer keeps result comparison aligned across window sizes and DPI.
 - Setup, Portable and SHA-256 checksums are published through GitHub Releases.
 
-## Новое
+## Кратко по-русски
+
+RC6 переводит Avelune от преимущественно интерфейсного обновления к функциональному релизу качества и производительности.
 
 1. Одиннадцать понятных AI-профилей для фото, старых снимков, портретов, игровых изображений, аниме, арта, быстрой обработки и максимальной детализации.
 2. Smart Restore / Auto Profile рекомендует локальный профиль по изображению и доступному железу.
