@@ -119,7 +119,7 @@ async function fetchExample(example) {
 async function main() {
   fs.mkdirSync(outputDir, { recursive: true });
 
-  // BUILD_RC6_WINDOWS.cmd prepares the source snapshot and electron-builder may
+  // The release builder prepares the source snapshot and electron-builder may
   // invoke this script again. Do not repeat a slow failed GitHub request twice
   // during the same build; retry automatically on a later build.
   try {

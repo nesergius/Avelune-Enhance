@@ -1,11 +1,21 @@
 # Сборка Avelune Enhance 2.0.0 RC6
 
-## Рекомендуемый способ на Windows
+## Для пользователей
 
-Распакуйте архив в новую папку и запустите:
+Готовые Windows-файлы публикуются как GitHub Release assets:
+
+- `Avelune-Enhance-2.0.0-RC6-Setup-x64.exe`;
+- `Avelune-Enhance-2.0.0-RC6-Portable-x64.exe`;
+- `SHA256SUMS.txt`.
+
+Не коммитьте собранные `.exe` в исходный репозиторий: они должны жить в Releases или CI artifacts.
+
+## Сборка из исходников
+
+Распакуйте исходники в новую папку и запустите:
 
 ```text
-BUILD_RC6_WINDOWS.cmd
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\build-rc6-release.ps1
 ```
 
 ## Что делает release builder
@@ -39,7 +49,7 @@ npm run verify:resources
 npm run dist:win
 ```
 
-`npm start` и Windows-команды сначала подготавливают официальные модели и демонстрационные материалы.
+`npm start`, `npm run release:win` и release-builder сначала подготавливают официальные модели и демонстрационные материалы.
 
 ## Результаты
 

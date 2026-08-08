@@ -1,5 +1,7 @@
 ## RC6 FINAL restoration optimization
 
+- Removed personal root Windows CMD launchers from the public source tree. Ready-to-use Setup and Portable builds now belong in GitHub Releases/CI artifacts, while the reproducible QA builder remains under `tools/build-rc6-release.ps1`.
+- Updated the Windows workflow so tag builds can publish Setup, Portable, update metadata and SHA-256 checksums as GitHub Release assets.
 - Completed repository hygiene for the public RC6 source tree: required renderer assets are tracked, stale RC note clutter and source-only model weights are excluded, and package metadata points to the GitHub repository and issue tracker.
 - Updated RC6 README/release notes to match the current catalog of 11 profiles, 6 official NCNN models and the separately installed local Photo Restore Pro/Ultra packages.
 - Added Avelune Smart Restore and Game Images profile modes without adding unverified model weights.

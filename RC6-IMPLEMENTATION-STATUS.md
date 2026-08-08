@@ -36,7 +36,7 @@
 
 ## Дополнительно
 
-Обновлены логотип и icon assets. Все функции проходят автоматические тесты исходников. Финальную Windows-runtime проверку необходимо выполнить через `BUILD_RC6_WINDOWS.cmd` на целевой машине.
+Обновлены логотип и icon assets. Все функции проходят автоматические тесты исходников. Финальная Windows-runtime проверка выполняется через `tools\build-rc6-release.ps1` или tag-based GitHub Actions release build.
 
 
 ## Исправление загрузки RealESRNet

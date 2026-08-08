@@ -47,6 +47,12 @@ test("source stager excludes every generated build and backup tree", () => {
   }
 });
 
+test("public source tree keeps personal root Windows launchers out of main", () => {
+  assert.equal(fs.existsSync(path.join(root, "BUILD_RC5_2_WINDOWS.cmd")), false);
+  assert.equal(fs.existsSync(path.join(root, "BUILD_RC6_WINDOWS.cmd")), false);
+  assert.equal(fs.existsSync(path.join(root, "tools", "build-rc6-release.ps1")), true);
+});
+
 test("source stager copies a complete tree without robocopy and omits generated content", async () => {
   const temporary = await fs.promises.mkdtemp(path.join(os.tmpdir(), "avelune-stage-test-"));
   const source = path.join(temporary, "source");

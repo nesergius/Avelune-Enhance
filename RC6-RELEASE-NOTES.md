@@ -23,4 +23,12 @@ RC6 переводит Avelune от преимущественно интерф�
 
 ## Сборка
 
-Распакуйте исходники в новую папку и запустите `BUILD_RC6_WINDOWS.cmd`. Готовые файлы и QA-отчёты появятся в `RC6-OUTPUT`.
+Готовые Windows-файлы публикуются в GitHub Releases как `Setup`, `Portable`, update metadata и `SHA256SUMS.txt`.
+
+Для воспроизводимой сборки из исходников запустите:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\build-rc6-release.ps1
+```
+
+Локальные файлы и QA-отчёты появятся в `RC6-OUTPUT`.

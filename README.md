@@ -26,13 +26,23 @@ Avelune Enhance — локальное Windows-приложение для ув�
 Вход: PNG, JPG/JPEG, JFIF, WebP.  
 Выход: PNG, JPG, WebP.
 
-## Быстрая Windows-сборка
+## Готовые Windows-файлы
 
-1. Распакуйте исходники в новую папку.
-2. Запустите `BUILD_RC6_WINDOWS.cmd`.
-3. Дождитесь сообщения `[PASS] Open RC6-OUTPUT`.
+Обычным пользователям не нужно собирать проект вручную. Скачайте готовый установщик или portable-версию на странице [GitHub Releases](https://github.com/nesergius/Avelune-Enhance/releases):
 
-Скрипт сам:
+- `Avelune-Enhance-2.0.0-RC6-Setup-x64.exe` — обычная установка Windows;
+- `Avelune-Enhance-2.0.0-RC6-Portable-x64.exe` — portable-запуск без установки;
+- `SHA256SUMS.txt` — контрольные суммы для проверки загрузки.
+
+## Сборка из исходников
+
+Для воспроизводимой локальной сборки и полного QA используйте канонический release-builder:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\build-rc6-release.ps1
+```
+
+Builder сам:
 
 - проверит и установит закреплённые официальные модели;
 - сформирует и проверит манифест ресурсов;
@@ -41,7 +51,7 @@ Avelune Enhance — локальное Windows-приложение для ув�
 - проверит запуск, движок, clipboard preview и интерфейс на нескольких разрешениях/DPI;
 - сохранит SHA-256 и отчёты.
 
-Подробности: [BUILDING.md](BUILDING.md), [RC6-IMPLEMENTATION-STATUS.md](RC6-IMPLEMENTATION-STATUS.md), [MODEL_PROVENANCE.md](MODEL_PROVENANCE.md).
+Готовые локальные артефакты появятся в `RC6-OUTPUT`. Подробности: [BUILDING.md](BUILDING.md), [RC6-IMPLEMENTATION-STATUS.md](RC6-IMPLEMENTATION-STATUS.md), [MODEL_PROVENANCE.md](MODEL_PROVENANCE.md).
 
 ## Лицензии
 

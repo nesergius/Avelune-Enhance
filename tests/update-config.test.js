@@ -27,3 +27,14 @@ test("Updater does not use setFeedURL and is gated for RC and Portable builds", 
   assert.match(updater, /channel = prerelease \? "rc" : "latest"/);
   assert.match(main, /initializeUpdater\(\{\s*app\s*,\s*logLine\s*\}\)/);
 });
+
+test("tagged Windows builds publish downloadable release assets", () => {
+  const workflow = fs.readFileSync(path.join(ROOT, ".github", "workflows", "build-windows-v2.yml"), "utf8");
+  assert.match(workflow, /startsWith\(github\.ref, 'refs\/tags\/v'\)/);
+  assert.match(workflow, /Publish GitHub Release assets/);
+  assert.match(workflow, /gh release create/);
+  assert.match(workflow, /gh release upload/);
+  assert.match(workflow, /Avelune-Enhance-\.\+\-\(Setup\|Portable\)-x64/);
+  assert.match(workflow, /SHA256SUMS\.txt/);
+  assert.match(workflow, /contents: write/);
+});
