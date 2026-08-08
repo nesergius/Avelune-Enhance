@@ -1,5 +1,6 @@
 ## RC6 FINAL restoration optimization
 
+- Fixed GitHub-hosted Windows release builds on lean PowerShell environments by hashing files through .NET SHA-256 instead of relying on `Get-FileHash`.
 - Removed personal root Windows CMD launchers from the public source tree. Ready-to-use Setup and Portable builds now belong in GitHub Releases/CI artifacts, while the reproducible QA builder remains under `tools/build-rc6-release.ps1`.
 - Updated the Windows workflow so tag builds can publish Setup, Portable, update metadata and SHA-256 checksums as GitHub Release assets.
 - Completed repository hygiene for the public RC6 source tree: required renderer assets are tracked, stale RC note clutter and source-only model weights are excluded, and package metadata points to the GitHub repository and issue tracker.

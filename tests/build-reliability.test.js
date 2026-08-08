@@ -5,6 +5,9 @@ const path=require("node:path");
 const test=require("node:test");
 const root=path.resolve(__dirname,"..");
 const builder=fs.readFileSync(path.join(root,"tools","build-rc6-release.ps1"),"utf8");
+const modelFetcher=fs.readFileSync(path.join(root,"tools","fetch-official-models.ps1"),"utf8");
+const nativeSourceBuilder=fs.readFileSync(path.join(root,"tools","build-native-source-archive.ps1"),"utf8");
+const windowsWorkflow=fs.readFileSync(path.join(root,".github","workflows","build-windows-v2.yml"),"utf8");
 const pkg=JSON.parse(fs.readFileSync(path.join(root,"package.json"),"utf8"));
 
 test("RC6 retries only recognized transient Windows file locks",()=>{
@@ -42,4 +45,12 @@ test("release success remains gated by packaged startup UI and engine probes",()
   const engineIndex=builder.indexOf("Packaged native engine smoke test passed");
   const successIndex=builder.lastIndexOf("Success = $true");
   assert.ok(retryIndex>=0 && runtimeIndex>retryIndex && uiIndex>runtimeIndex && engineIndex>uiIndex && successIndex>engineIndex);
+});
+
+test("PowerShell build scripts hash files without Get-FileHash dependency",()=>{
+  for (const script of [builder, modelFetcher, nativeSourceBuilder, windowsWorkflow]) {
+    assert.doesNotMatch(script,/Get-FileHash/);
+    assert.match(script,/System\.Security\.Cryptography\.SHA256/);
+    assert.match(script,/ComputeHash/);
+  }
 });

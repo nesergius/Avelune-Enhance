@@ -31,7 +31,20 @@ $PrimaryRequired = @(
 )
 
 function Get-Sha256([string]$Path) {
-  return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+  $stream = [System.IO.File]::OpenRead($Path)
+  try {
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try {
+      $hash = $sha.ComputeHash($stream)
+      return (($hash | ForEach-Object { $_.ToString("x2") }) -join "")
+    }
+    finally {
+      $sha.Dispose()
+    }
+  }
+  finally {
+    $stream.Dispose()
+  }
 }
 
 function Download-With-Retry([string]$Url, [string]$Destination, [string]$Label) {

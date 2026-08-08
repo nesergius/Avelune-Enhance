@@ -128,6 +128,23 @@ jobs:
       - name: Create SHA-256 checksum list
         shell: pwsh
         run: |
+          function Get-Sha256([string]$Path) {
+            $stream = [System.IO.File]::OpenRead($Path)
+            try {
+              $sha = [System.Security.Cryptography.SHA256]::Create()
+              try {
+                $hash = $sha.ComputeHash($stream)
+                return (($hash | ForEach-Object { $_.ToString("x2") }) -join "")
+              }
+              finally {
+                $sha.Dispose()
+              }
+            }
+            finally {
+              $stream.Dispose()
+            }
+          }
+
           $files = Get-ChildItem -LiteralPath dist -File |
             Where-Object {
               $_.Name -match '^Avelune-Enhance-.+-(Setup|Portable)-x64[.]exe$' -or
@@ -141,7 +158,7 @@ jobs:
           }
 
           $lines = foreach ($file in $files) {
-            $hash = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+            $hash = Get-Sha256 $file.FullName
             "$hash  $($file.Name)"
           }
 

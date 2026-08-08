@@ -256,7 +256,7 @@ function Get-NodeTools {
     }
 
     $expected = $Matches[1].ToLowerInvariant()
-    $actual = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+    $actual = Get-Sha256 $archivePath
     if ($expected -ne $actual) { throw "Portable Node.js integrity check failed." }
 
     Expand-Archive -LiteralPath $archivePath -DestinationPath $toolsRoot -Force
@@ -292,7 +292,20 @@ function Assert-PublicLock {
 }
 
 function Get-Sha256([string]$Path) {
-    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+    $stream = [System.IO.File]::OpenRead($Path)
+    try {
+        $sha = [System.Security.Cryptography.SHA256]::Create()
+        try {
+            $hash = $sha.ComputeHash($stream)
+            return (($hash | ForEach-Object { $_.ToString("x2") }) -join "")
+        }
+        finally {
+            $sha.Dispose()
+        }
+    }
+    finally {
+        $stream.Dispose()
+    }
 }
 
 function Get-FriendlySize([long]$Bytes) {
@@ -321,7 +334,7 @@ function Test-NativeEngineSource {
         if (-not (Test-Path -LiteralPath $archive -PathType Leaf)) {
             return $false
         }
-        $actual = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+        $actual = Get-Sha256 $archive
         return $actual -eq ([string]$metadata.CorrespondingSourceArchiveSha256).ToLowerInvariant()
     }
     catch {

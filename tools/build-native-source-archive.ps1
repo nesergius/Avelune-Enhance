@@ -18,6 +18,23 @@ function Download-File([string]$Uri, [string]$Destination) {
     Invoke-WebRequest -UseBasicParsing -Uri $Uri -OutFile $Destination
 }
 
+function Get-Sha256([string]$Path) {
+    $stream = [System.IO.File]::OpenRead($Path)
+    try {
+        $sha = [System.Security.Cryptography.SHA256]::Create()
+        try {
+            $hash = $sha.ComputeHash($stream)
+            return (($hash | ForEach-Object { $_.ToString("x2") }) -join "")
+        }
+        finally {
+            $sha.Dispose()
+        }
+    }
+    finally {
+        $stream.Dispose()
+    }
+}
+
 function Get-FirstDirectory([string]$Path) {
     $directory = Get-ChildItem -LiteralPath $Path -Directory | Select-Object -First 1
     if (-not $directory) { throw "No extracted directory found in $Path" }
@@ -144,9 +161,9 @@ finally {
     Pop-Location
 }
 
-$archiveHash = (Get-FileHash -LiteralPath $OutputArchive -Algorithm SHA256).Hash.ToLowerInvariant()
-$patchHash = (Get-FileHash -LiteralPath (Join-Path $NativeSourceDir "avelune-engine-source.patch") -Algorithm SHA256).Hash.ToLowerInvariant()
-$binaryPatchHash = (Get-FileHash -LiteralPath (Join-Path $NativeSourceDir "avelune-engine.binary-patch.json") -Algorithm SHA256).Hash.ToLowerInvariant()
+$archiveHash = Get-Sha256 $OutputArchive
+$patchHash = Get-Sha256 (Join-Path $NativeSourceDir "avelune-engine-source.patch")
+$binaryPatchHash = Get-Sha256 (Join-Path $NativeSourceDir "avelune-engine.binary-patch.json")
 
 [PSCustomObject]@{
     Archive = $OutputArchive
