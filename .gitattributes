@@ -1,1 +1,19 @@
-gfpgan/weights/*.pth filter=lfs diff=lfs merge=lfs -text
+* text=auto eol=lf
+
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+*.bin -text
+*.dll -text
+*.exe -text
+*.ico -text
+*.jpg -text
+*.jpeg -text
+*.png -text
+*.webp -text
+*.zip -text
+*.pth -text
+*.pt -text
+*.ckpt -text
+
+resources/models/*.param -text

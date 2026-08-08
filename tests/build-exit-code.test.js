@@ -7,7 +7,7 @@ const test = require("node:test");
 
 const root = path.resolve(__dirname, "..");
 const builder = fs.readFileSync(
-  path.join(root, "tools", "build-rc5-2-release.ps1"),
+  path.join(root, "tools", "build-rc6-release.ps1"),
   "utf8"
 );
 

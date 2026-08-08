@@ -32,8 +32,8 @@
     {
       "path": "resources/models/official-model-manifest.json",
       "role": "ai-model",
-      "bytes": 4229,
-      "sha256": "18677bf9a2d8fca3d3f97f551be12df16a60b72983e20f2941b03bffe850b2c2"
+      "bytes": 4161,
+      "sha256": "e325ac657a5870ba13769b352ceacdd6fb3389032979e64ae9e6613dbe6a743d"
     },
     {
       "path": "resources/models/realesr-animevideov3-x2.bin",

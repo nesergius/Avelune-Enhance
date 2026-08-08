@@ -8,6 +8,13 @@
     "name": "Avelune Project"
   },
   "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nesergius/Avelune-Enhance.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nesergius/Avelune-Enhance/issues"
+  },
   "main": "src/main.js",
   "scripts": {
     "start": "npm run prepare:official-models && npm run prepare:profile-examples && npm run manifest:resources && npm run verify:resources && electron .",
@@ -28,7 +35,7 @@
   "build": {
     "appId": "studio.avelune.enhance",
     "productName": "Avelune Enhance",
-    "copyright": "Copyright © 2026 Avelune Project",
+    "copyright": "Copyright (C) 2026 Avelune Project",
     "asar": true,
     "asarUnpack": [],
     "files": [
