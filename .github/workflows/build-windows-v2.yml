@@ -208,12 +208,14 @@ jobs:
             gh release create $tag `
               --title "Avelune Enhance $tag" `
               --notes-file RC6-RELEASE-NOTES.md `
+              --target $env:GITHUB_SHA `
               --prerelease
           }
           else {
             gh release edit $tag `
               --title "Avelune Enhance $tag" `
               --notes-file RC6-RELEASE-NOTES.md `
+              --target $env:GITHUB_SHA `
               --prerelease
           }
 
