@@ -279,11 +279,11 @@ jobs:
 
           Write-Host "[PASS] Microsoft Defender scanned $(@($scanResults).Count) release file(s)."
 
-      - name: Upload unsigned Windows build artifact
-        id: upload-unsigned-artifact
+      - name: Upload Windows build artifact
+        id: upload-windows-artifact
         uses: actions/upload-artifact@v7
         with:
-          name: avelune-windows-unsigned-${{ github.sha }}
+          name: avelune-windows-release-${{ github.sha }}
           if-no-files-found: error
           retention-days: 30
           path: |
@@ -338,6 +338,6 @@ jobs:
       - name: Report GitHub artifact metadata
         shell: pwsh
         run: |
-          Write-Host "Artifact ID: ${{ steps.upload-unsigned-artifact.outputs.artifact-id }}"
-          Write-Host "Artifact URL: ${{ steps.upload-unsigned-artifact.outputs.artifact-url }}"
-          Write-Host "Artifact digest: ${{ steps.upload-unsigned-artifact.outputs.artifact-digest }}"
+          Write-Host "Artifact ID: ${{ steps.upload-windows-artifact.outputs.artifact-id }}"
+          Write-Host "Artifact URL: ${{ steps.upload-windows-artifact.outputs.artifact-url }}"
+          Write-Host "Artifact digest: ${{ steps.upload-windows-artifact.outputs.artifact-digest }}"
