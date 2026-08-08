@@ -1,5 +1,7 @@
 ## RC6 FINAL restoration optimization
 
+- Completed repository hygiene for the public RC6 source tree: required renderer assets are tracked, stale RC note clutter and source-only model weights are excluded, and package metadata points to the GitHub repository and issue tracker.
+- Updated RC6 README/release notes to match the current catalog of 11 profiles, 6 official NCNN models and the separately installed local Photo Restore Pro/Ultra packages.
 - Added Avelune Smart Restore and Game Images profile modes without adding unverified model weights.
 - Fixed Photo Restore Pro CLI compatibility by accepting quality presets in the local runner.
 - Fixed Photo Restore Ultra runtime verification: installer now pins a BasicSR-compatible torch/torchvision pair and imports the full DiffBIR/GFPGAN/Real-ESRGAN stack before writing `installed.json`.
@@ -48,7 +50,7 @@
 
 ## 2.0.0 RC6 — quality, workflow and QA
 
-- Added six verified official NCNN model identifiers and eight transparent profiles.
+- Added six verified official NCNN model identifiers and eleven transparent profiles.
 - Added local Auto Profile, real-engine region preview, persistent Smart Queue and GPU AutoTune.
 - Added conservative RealESRNet face refinement with strength-dependent quality mode.
 - Added compatible metadata/ICC preservation for JPEG, PNG and extended WebP.

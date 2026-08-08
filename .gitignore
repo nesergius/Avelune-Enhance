@@ -5,7 +5,7 @@ node_modules/
 # Electron Builder output
 dist/
 release/
-out/
+/out/
 
 # Logs
 *.log
@@ -84,3 +84,4 @@ QA-REPORT-*/
 .rc*-backup-*/
 .qa-*/
 .DS_Store
+renderer/out/assets/avelune-logo-master.png

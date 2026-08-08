@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-08-08T19:24:18.381Z",
+  "purpose": "Official upstream examples shown in the Avelune profile picker. No user images are transmitted.",
+  "licenseNotice": "Real-ESRGAN materials are attributed to Xintao Wang and contributors under the repository BSD-3-Clause notice. Image rights remain with their respective owners.",
+  "examples": [
+    {
+      "id": "realesrgan-x4plus",
+      "filename": "official-realesrgan-x4plus.jpg",
+      "mediaType": "image/jpeg",
+      "minBytes": 100000,
+      "upstreamPage": "https://github.com/xinntao/Real-ESRGAN",
+      "description": "Official Real-ESRGAN comparison teaser for the general RealESRGAN_x4plus model.",
+      "source": "cached",
+      "bytes": 405152,
+      "sha256": "d6089685a1246831b8f5afe68cdfcd573ad9c1142209573b3db699742ac92ee0"
+    },
+    {
+      "id": "realesrgan-x4plus-anime-6b",
+      "filename": "official-realesrgan-x4plus-anime-6b.png",
+      "mediaType": "image/png",
+      "minBytes": 100000,
+      "upstreamPage": "https://github.com/xinntao/Real-ESRGAN/blob/master/docs/anime_model.md",
+      "description": "Official comparison published for RealESRGAN_x4plus_anime_6B.",
+      "source": "cached",
+      "bytes": 843943,
+      "sha256": "a711bc8b0e298428a404eded7c6ba12cac93a027e88de5e2c7d11b140a798385"
+    }
+  ],
+  "failures": []
+}
