@@ -8,8 +8,6 @@
 BUILD_RC6_WINDOWS.cmd
 ```
 
-Совместимый старый файл `BUILD_RC5_2_WINDOWS.cmd` перенаправляет на RC6 builder.
-
 ## Что делает release builder
 
 1. Определяет установленный Node.js/npm или подготавливает поддерживаемое окружение.
