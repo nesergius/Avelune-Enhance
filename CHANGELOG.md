@@ -1,7 +1,7 @@
 ## RC6 FINAL restoration optimization
 
 - Corrected public README and release notes so RC6 describes only the current adaptive viewer and available local restoration paths.
-- Fixed GitHub-hosted Windows release builds on lean PowerShell environments by hashing files through .NET SHA-256 instead of relying on optional hash cmdlets.
+- Fixed GitHub-hosted Windows release builds on lean PowerShell environments.
 - Removed personal root Windows CMD launchers from the public source tree. Ready-to-use Setup and Portable builds now belong in GitHub Releases/CI artifacts, while the reproducible QA builder remains under `tools/build-rc6-release.ps1`.
 - Updated the Windows workflow so tag builds can publish Setup, Portable, update metadata and SHA-256 checksums as GitHub Release assets.
 - Completed repository hygiene for the public RC6 source tree: required renderer assets are tracked, stale RC note clutter and source-only model weights are excluded, and package metadata points to the GitHub repository and issue tracker.
@@ -11,7 +11,7 @@
 - Fixed Photo Restore Ultra runtime verification: installer now pins a BasicSR-compatible torch/torchvision pair and imports the full DiffBIR/GFPGAN/Real-ESRGAN stack before writing `installed.json`.
 - Fixed missing DiffBIR runtime dependencies in the Ultra installer: pandas, ftfy, regex and torchsde are installed and verified before the package is marked ready.
 - Fixed DiffBIR v2.1 CLI compatibility in the Ultra runner: integer `noise_aug`, official cleaner/VAE/CLDM tile flags and control `strength` are now passed correctly.
-- Tuned Ultra quality presets for better 8 GB GPU efficiency while keeping Maximum mode high quality, and added a QA-only step override for fast end-to-end smoke tests.
+- Tuned Ultra quality presets for better 8 GB GPU efficiency while keeping Maximum mode high quality.
 - Fixed first-run network dependency in Photo Restore Pro/Ultra: installers now include GFPGAN facexlib detection/parsing weights and mark packages as `runtimePatch=3`.
 - Completed the Ultra cascade: DiffBIR scene restoration, GFPGAN face refinement, then existing Avelune Real-ESRGAN finalization.
 - Updated Smart Restore routing with damage, blur, color, art/game and VRAM heuristics; 8 GB-class GPUs are accepted from 7.5 GiB dedicated VRAM.
@@ -48,14 +48,13 @@
 
 # 2.0.0 RC6
 
-## 2.0.0 RC6 — quality, workflow and QA
+## 2.0.0 RC6 — quality and workflow
 
-- Added six verified official NCNN model identifiers and eleven transparent profiles.
-- Added local Auto Profile, adaptive Before/After result viewing, persistent Smart Queue and GPU AutoTune.
-- Added conservative RealESRNet face refinement with strength-dependent quality mode.
+- Added eleven clear AI profiles for photos, old photo recovery, portraits, game screenshots, anime, art, fast processing and maximum detail.
+- Added local Auto Profile recommendations from image signals and available hardware.
+- Added adaptive Before/After result viewing and persistent Smart Queue.
+- Added conservative local restoration through verified NCNN models, with optional Photo Restore Pro/Ultra packages for heavier recovery work.
 - Added compatible metadata/ICC preservation for JPEG, PNG and extended WebP.
-- Replaced brittle single-geometry release checks with a multi-viewport packaged QA matrix and screenshots.
-- Refreshed the production logo and Windows icon assets.
 
 # 2.0.0 RC6 — quality, workflow and QA foundation
 

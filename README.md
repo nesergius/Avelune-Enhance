@@ -6,23 +6,21 @@ Avelune Enhance is a local Windows AI image enhancement and restoration studio w
 
 ## RC6 Highlights
 
-- **11 transparent profiles** built on 6 verified official NCNN models plus 2 optional downloadable local restoration packages: Smart Restore, Natural, Game Images, Neural Restore, Photo Restore Ultra, Photo Restore Pro, Restore Faithful, Art, Anime Video, Fast 2x and Detail+.
-- **Smart Restore / Auto Profile** analyzes saturation, edges, noise, JPEG blocking, blur, brightness, resolution and available VRAM before recommending a processing path.
-- **Adaptive Before/After viewer** keeps result comparison aligned across window sizes and 100/125/150% DPI with a precise divider and safe file/clipboard preview.
-- **Smart Queue** provides batch processing with per-file progress, pause, resume, retry failed items, skip existing results and persisted queue state.
-- **Local photo restoration** uses the built-in Neural Restore through RealESRNet/Real-ESRGAN, while downloadable Photo Restore Pro and Photo Restore Ultra add GFPGAN/DiffBIR cascades for heavier restoration work.
-- **Metadata and color handling** safely preserves compatible EXIF/XMP/IPTC/ICC blocks for JPEG, PNG and extended WebP.
-- **GPU AutoTune** runs a local benchmark, selects tile size and retries with smaller tiles after VRAM/device-loss failures.
-- **Release QA gate** validates packaged startup, native engine smoke processing, screenshot-based UI checks and five window/DPI configurations.
-- **Updated production logo** provides transparent PNG/ICO assets for the window, taskbar, installer and website.
+- **Local AI image enhancement** for photos, portraits, game screenshots, digital art, anime frames and mixed image collections.
+- **11 clear AI profiles** for natural upscale, faithful restore, old photo restoration, severe photo recovery, art/anime enhancement, fast processing and maximum detail.
+- **Smart Restore / Auto Profile** analyzes the image and available hardware before recommending the best local profile.
+- **Photo Restore Pro and Photo Restore Ultra** add optional local restoration packages for damaged photos, faces, JPEG artifacts and low-resolution images.
+- **Adaptive Before/After viewer** keeps result comparison aligned across window sizes and 100/125/150% DPI.
+- **Smart Queue** provides batch processing with per-file progress, pause, resume, retry failed items and skip-existing behavior.
+- **Private local workflow** keeps user images on the computer for built-in local profiles.
+- **Metadata and color handling** preserves compatible EXIF/XMP/IPTC/ICC data for common image formats.
 
 ## Honest RC6 Limitations
 
 - The built-in **Neural Restore** profile is not GFPGAN and does not perform generative face replacement. It is a conservative second pass through verified restoration/upscale models. Downloadable **Photo Restore Pro** and **Photo Restore Ultra** use separate local GFPGAN/DiffBIR packages and are enabled only after installation through AI Package Manager.
 - TIFF and a true end-to-end 16-bit AI pipeline are not included in RC6. The bundled NCNN runtime is currently scoped to PNG/JPEG/WebP.
-- Face restoration strength controls whether and how the second pass runs; RC6 does not yet do pixel-level face-mask blending.
-- Additional official model files are downloaded and verified during Windows build preparation. The normal application workflow does not use network access for model processing.
-- The old separate fragment preview workflow is not part of the public RC6 UI. Result comparison now uses one adaptive Before/After workspace.
+- Face restoration is conservative and does not invent identity-level details when the source image does not contain enough information.
+- Optional restoration packages must be installed through AI Package Manager before Photo Restore Pro/Ultra can be used.
 - RC6 release assets are unsigned. Public stable distribution still requires Authenticode signing and final antivirus verification.
 
 ## Supported Formats

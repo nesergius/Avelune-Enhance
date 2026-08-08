@@ -64,12 +64,17 @@ test("RC6 removes the discarded region-preview workflow completely", () => {
 test("public README is English-first and advertises only available local restoration paths", () => {
   assert.match(readme, /Avelune Enhance is a local Windows AI image enhancement and restoration studio/);
   assert.match(readme, /RC6 Highlights/);
+  assert.match(readme, /Local AI image enhancement/);
+  assert.match(readme, /Photo Restore Pro and Photo Restore Ultra/);
   assert.match(readme, /Adaptive Before\/After viewer/);
   assert.match(readme, /GitHub Releases/);
   assert.match(readme, /Russian version/);
   assert.doesNotMatch(readme, /Основные возможности RC6|Честные ограничения RC6|Готовые Windows-файлы/);
+  assert.doesNotMatch(readme, /GPU AutoTune|Release QA gate|Updated production logo|QA-FAILED|packaged smoke tests/);
   assert.match(readmeRu, /Основные возможности RC6/);
   assert.match(readmeRu, /English version/);
+  assert.doesNotMatch(readmeRu, /GPU AutoTune|Новый release-gate|Обновлённый логотип|QA-FAILED|packaged smoke tests/);
+  assert.doesNotMatch(releaseNotes, /GPU AutoTune|Новый packaged QA gate|Обновлённый логотип|QA-FAILED|repeatable QA/);
   assert.doesNotMatch(readme, /OpenAI GPT Image|api\.openai\.com|облачный профиль|cloud restoration profile/);
 });
 
