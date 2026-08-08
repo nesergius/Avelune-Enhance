@@ -53,7 +53,7 @@ Builder сам:
 - проверит запуск, движок, clipboard preview и интерфейс на нескольких разрешениях/DPI;
 - сохранит SHA-256 и отчёты.
 
-Готовые локальные артефакты появятся в `RC6-OUTPUT`. Подробности: [BUILDING.md](BUILDING.md), [RC6-IMPLEMENTATION-STATUS.md](RC6-IMPLEMENTATION-STATUS.md), [MODEL_PROVENANCE.md](MODEL_PROVENANCE.md).
+Готовые локальные артефакты появятся в `RC6-OUTPUT`. Подробности: [BUILDING.md](BUILDING.md) и [MODEL_PROVENANCE.md](MODEL_PROVENANCE.md).
 
 ## Лицензии
 

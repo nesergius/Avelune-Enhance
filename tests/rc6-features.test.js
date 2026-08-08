@@ -70,12 +70,18 @@ test("public README is English-first and advertises only available local restora
   assert.match(readme, /GitHub Releases/);
   assert.match(readme, /Russian version/);
   assert.doesNotMatch(readme, /Основные возможности RC6|Честные ограничения RC6|Готовые Windows-файлы/);
+  assert.doesNotMatch(readme, /RC6-IMPLEMENTATION-STATUS|RC6-RUNTIME-QA-CHECKLIST/);
   assert.doesNotMatch(readme, /GPU AutoTune|Release QA gate|Updated production logo|QA-FAILED|packaged smoke tests/);
   assert.match(readmeRu, /Основные возможности RC6/);
   assert.match(readmeRu, /English version/);
+  assert.doesNotMatch(readmeRu, /RC6-IMPLEMENTATION-STATUS|RC6-RUNTIME-QA-CHECKLIST/);
   assert.doesNotMatch(readmeRu, /GPU AutoTune|Новый release-gate|Обновлённый логотип|QA-FAILED|packaged smoke tests/);
   assert.doesNotMatch(releaseNotes, /GPU AutoTune|Новый packaged QA gate|Обновлённый логотип|QA-FAILED|repeatable QA/);
   assert.doesNotMatch(readme, /OpenAI GPT Image|api\.openai\.com|облачный профиль|cloud restoration profile/);
+  assert.deepEqual(
+    pkg.build.files.filter((entry) => /RC6-(?:IMPLEMENTATION-STATUS|RUNTIME-QA-CHECKLIST)/.test(entry)),
+    []
+  );
 });
 
 test("RC6 Smart Queue supports scan pause resume retry and selected files", () => {

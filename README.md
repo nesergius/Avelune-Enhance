@@ -53,7 +53,7 @@ The builder will:
 - verify startup, engine processing, clipboard preview and UI/DPI behavior;
 - write SHA-256 checksums and QA reports.
 
-Local artifacts are written to `RC6-OUTPUT`. See also [BUILDING.md](BUILDING.md), [RC6-IMPLEMENTATION-STATUS.md](RC6-IMPLEMENTATION-STATUS.md) and [MODEL_PROVENANCE.md](MODEL_PROVENANCE.md).
+Local artifacts are written to `RC6-OUTPUT`. See also [BUILDING.md](BUILDING.md) and [MODEL_PROVENANCE.md](MODEL_PROVENANCE.md).
 
 ## Licenses
 
