@@ -1,5 +1,6 @@
 ## RC6 FINAL restoration optimization
 
+- Corrected public README and release notes so RC6 describes only the current adaptive viewer and available local restoration paths.
 - Fixed GitHub-hosted Windows release builds on lean PowerShell environments by hashing files through .NET SHA-256 instead of relying on optional hash cmdlets.
 - Removed personal root Windows CMD launchers from the public source tree. Ready-to-use Setup and Portable builds now belong in GitHub Releases/CI artifacts, while the reproducible QA builder remains under `tools/build-rc6-release.ps1`.
 - Updated the Windows workflow so tag builds can publish Setup, Portable, update metadata and SHA-256 checksums as GitHub Release assets.
@@ -23,10 +24,6 @@
 - Expanded the language matrix to 47 selectable locales, including Kazakh and regional auto-detection aliases.
 - Completed English UI coverage for static and dynamic renderer strings, including model catalog cards, AI package statuses, toasts, progress HUDs and mixed inline headings.
 - Completed generated UI dictionaries for every selectable non-Russian locale and added a regression audit that blocks missing strings, English fallback gaps and leaked generation placeholders; Kazakh now has manual overrides for core UI terms.
-
-## RC6 FIXED8
-- Добавлен Avelune Generative Restore: OpenAI GPT Image с высоким сохранением входа и локальной TTA-финализацией.
-- API-ключ хранится зашифрованно и облачный режим выключен по умолчанию.
 
 ## RC6 FIXED5 — compact workflow header
 
@@ -54,7 +51,7 @@
 ## 2.0.0 RC6 — quality, workflow and QA
 
 - Added six verified official NCNN model identifiers and eleven transparent profiles.
-- Added local Auto Profile, real-engine region preview, persistent Smart Queue and GPU AutoTune.
+- Added local Auto Profile, adaptive Before/After result viewing, persistent Smart Queue and GPU AutoTune.
 - Added conservative RealESRNet face refinement with strength-dependent quality mode.
 - Added compatible metadata/ICC preservation for JPEG, PNG and extended WebP.
 - Replaced brittle single-geometry release checks with a multi-viewport packaged QA matrix and screenshots.
@@ -65,7 +62,7 @@
 - Добавлены проверяемые distinct-модели RealESRNet x4plus и AnimeVideo v3 2×/3×/4×.
 - Builder закрепляет официальный архив SHA-256, проверяет ранее переименованные модели byte-for-byte и формирует manifest добавленных файлов.
 - Добавлен локальный Auto Profile с объяснением выбора.
-- Добавлен real-engine preview фрагмента до 512×512 и кэш профилей.
+- Добавлен адаптивный просмотр результата «До/После» и безопасный preview для файлов/буфера обмена.
 - Пакетный режим заменён на Smart Queue с pause/resume, повтором ошибок, пропуском готовых файлов и per-item progress.
 - Добавлен консервативный локальный второй проход восстановления лиц без ложного заявления GFPGAN.
 - Добавлено безопасное сохранение совместимых JPEG/PNG/extended-WebP метаданных и ICC.
@@ -292,10 +289,10 @@
 - Fixed the multi-viewport QA gate incorrectly requiring the fixed start button to be inside the scroll container.
 - The gate now verifies the real RC6 layout and records source/start control geometry.
 
-### RC6 hotfix — instant region preview result
+### RC6 hotfix — local preview result
 
-- Fixed the enhanced side of Instant Region Preview appearing blank with only the alt text visible.
-- Region results are now loaded through the validated local binary preview IPC path instead of relying on a direct `file://` URL.
+- Fixed the enhanced side of local result preview appearing blank with only the alt text visible.
+- Preview results are now loaded through the validated local binary preview IPC path instead of relying on a direct `file://` URL.
 - The progress panel closes only after the enhanced image has actually decoded.
 - Added bounded preview caching with object-URL cleanup and a regression test for the broken result path.
 

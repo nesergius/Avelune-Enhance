@@ -15,6 +15,9 @@ const constants = read("src", "constants.js");
 const modelFetcher = read("tools", "fetch-official-models.ps1");
 const builder = read("tools", "build-rc6-release.ps1");
 const pkg = JSON.parse(read("package.json"));
+const readme = read("README.md");
+const releaseNotes = read("RC6-RELEASE-NOTES.md");
+const implementationStatus = read("RC6-IMPLEMENTATION-STATUS.md");
 
 test("RC6 pins and verifies distinct official NCNN model resources", () => {
   assert.match(modelFetcher, /Real-ESRGAN\/releases\/download\/v0\.2\.5\.0\/realesrgan-ncnn-vulkan-20220424-windows\.zip/);
@@ -52,6 +55,16 @@ test("RC6 removes the discarded region-preview workflow completely", () => {
   assert.doesNotMatch(renderer, /previewCacheKey|startRegionPreview|regionPreview/);
   assert.doesNotMatch(constants, /PREVIEW_REGION/);
   assert.doesNotMatch(main, /CHANNELS\.PREVIEW_REGION/);
+  for (const doc of [readme, releaseNotes, implementationStatus]) {
+    assert.doesNotMatch(doc, /Быстрый preview фрагмента|preview выбранного фрагмента|до 512×512|fragment-preview workflow/);
+  }
+});
+
+test("public README advertises only available local restoration paths", () => {
+  assert.match(readme, /English Summary/);
+  assert.match(readme, /Adaptive Before\/After viewer/);
+  assert.match(readme, /GitHub Releases/);
+  assert.doesNotMatch(readme, /OpenAI GPT Image|api\.openai\.com|облачный профиль|cloud restoration profile/);
 });
 
 test("RC6 Smart Queue supports scan pause resume retry and selected files", () => {

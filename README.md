@@ -6,7 +6,7 @@ Avelune Enhance — локальное Windows-приложение для ув�
 
 - **Одиннадцать прозрачных профилей** на шести проверяемых официальных NCNN-моделях и двух скачиваемых локальных restoration-пакетах: Smart Restore, Natural, Game Images, Neural Restore, Photo Restore Ultra, Photo Restore Pro, Restore Faithful, Art, Anime Video, Fast 2× и Detail+.
 - **Auto Profile** — локальный анализ насыщенности, контуров, шума, JPEG-блоков, яркости, разрешения и доступной VRAM с объяснением выбора.
-- **Быстрый preview фрагмента** — обработка реальным движком области до 512×512 с кэшем результатов и точным ползунком «До/После».
+- **Адаптивный просмотр результата** — единое рабочее поле с точным ползунком «До/После», безопасным file/clipboard preview и корректной геометрией на разных размерах окна и DPI.
 - **Smart Queue** — очередь пакетной обработки с прогрессом каждого файла, паузой, продолжением, повтором ошибок, пропуском готовых результатов и сохранением состояния.
 - **Локальное восстановление фото** — встроенный Neural Restore работает через RealESRNet/Real-ESRGAN, а скачиваемые Photo Restore Pro и Photo Restore Ultra добавляют GFPGAN/DiffBIR-каскады для тяжёлого restoration.
 - **Метаданные и цвет** — безопасное сохранение совместимых EXIF/XMP/IPTC/ICC-блоков для JPEG, PNG и расширенного WebP.
@@ -14,12 +14,23 @@ Avelune Enhance — локальное Windows-приложение для ув�
 - **Новый release-gate** — packaged smoke tests, пять конфигураций окна/DPI, скриншоты визуальной регрессии и сохранение собранных файлов в `QA-FAILED` при провале интерфейсной проверки.
 - **Обновлённый логотип** — прозрачные PNG-ресурсы для окна, панели задач, установщика и сайта.
 
+## English Summary
+
+Avelune Enhance is a local Windows AI image enhancement and restoration studio. User images are processed on the computer and are not uploaded by the built-in local profiles.
+
+- **11 transparent profiles** built on 6 verified official NCNN models plus optional downloadable local Photo Restore Pro/Ultra packages.
+- **Smart Restore / Auto Profile** analyzes image type, resolution, noise, JPEG blocking, blur, color and available VRAM before recommending a profile.
+- **Adaptive Before/After viewer** keeps result comparison aligned across window sizes and 100/125/150% DPI.
+- **Local restoration packages** add GFPGAN and DiffBIR cascades only after installation through AI Package Manager.
+- **Release QA** validates tests, resource integrity, packaged startup, UI/DPI probes and native engine smoke processing.
+
 ## Честные ограничения RC6
 
 - Встроенный **Neural Restore** не является GFPGAN и не выполняет генеративную замену лица. Это консервативный второй проход через проверенную модель восстановления. Скачиваемые **Photo Restore Pro** и **Photo Restore Ultra** используют отдельные локальные GFPGAN/DiffBIR-пакеты и включаются только после установки через AI Package Manager.
 - TIFF и полноценный 16-битный тракт пока не включены: текущий поставляемый NCNN-движок рассчитан на PNG/JPEG/WebP. Добавлять TIFF/16-bit без проверенного декодера и сквозного теста точности нельзя.
 - Сила восстановления лиц в RC6 управляет включением и характером второго прохода, но не выполняет пиксельное смешивание маски лица.
 - Официальные дополнительные модели загружаются и проверяются **во время подготовки/Windows-сборки**. В рабочем приложении сеть для моделей не используется.
+- Старый отдельный preview фрагмента удалён из публичного RC6: интерфейс использует один адаптивный просмотр исходника/результата и ползунок «До/После».
 
 ## Поддерживаемые форматы
 
@@ -56,7 +67,3 @@ Builder сам:
 ## Лицензии
 
 Код Avelune Enhance распространяется по AGPL-3.0-only. Сторонние AI-модели и нативные компоненты сохраняют собственные лицензии и атрибуцию. См. `THIRD_PARTY_NOTICES.md`, `MODEL_PROVENANCE.md` и папку `licenses/`.
-
-
-### Generative Restore
-Для экстремально повреждённых фото доступен отдельный добровольный облачный профиль OpenAI GPT Image. Локальные профили продолжают работать без отправки файлов в сеть.
