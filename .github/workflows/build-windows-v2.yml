@@ -48,7 +48,7 @@ jobs:
         run: npm test
 
   package-windows:
-    name: Build unsigned Windows artifacts
+    name: Build Windows artifacts
     needs: validate
     if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
     runs-on: windows-latest
@@ -82,11 +82,20 @@ jobs:
       - name: Run automated tests before packaging
         run: npm test
 
-      - name: Build unsigned Setup and Portable packages
+      - name: Build Setup and Portable packages
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
         run: npm run release:win
 
       - name: Verify expected Windows artifacts
         shell: pwsh
+        env:
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
         run: |
           $setup = Get-ChildItem -LiteralPath dist -File |
             Where-Object { $_.Name -match '^Avelune-Enhance-.+-Setup-x64[.]exe$' }
@@ -112,10 +121,23 @@ jobs:
             throw "Expected update metadata is missing: $metadata"
           }
 
+          $signingConfigured =
+            -not [string]::IsNullOrWhiteSpace($env:WIN_CSC_LINK) -or
+            -not [string]::IsNullOrWhiteSpace($env:CSC_LINK)
+
           foreach ($file in @($setup[0], $portable[0])) {
             $signature = Get-AuthenticodeSignature -LiteralPath $file.FullName
-            if ($signature.Status -ne [System.Management.Automation.SignatureStatus]::NotSigned) {
-              throw "Unsigned build stage expected NotSigned for $($file.Name), found $($signature.Status)."
+            if ($signingConfigured) {
+              if ($signature.Status -ne [System.Management.Automation.SignatureStatus]::Valid) {
+                throw "Required Authenticode signature is not valid for $($file.Name), found $($signature.Status)."
+              }
+              Write-Host "[PASS] Authenticode signature valid: $($file.Name)"
+            }
+            else {
+              if ($signature.Status -ne [System.Management.Automation.SignatureStatus]::NotSigned) {
+                throw "Unsigned release-candidate build expected NotSigned for $($file.Name), found $($signature.Status)."
+              }
+              Write-Host "[PASS] Unsigned release-candidate artifact: $($file.Name)"
             }
           }
 
@@ -123,7 +145,6 @@ jobs:
           Write-Host "[PASS] Portable: $($portable[0].Name)"
           Write-Host "[PASS] Blockmap: $($blockmap[0].Name)"
           Write-Host "[PASS] Metadata: rc.yml"
-          Write-Host "[PASS] Executables are intentionally unsigned before SignPath."
 
       - name: Create SHA-256 checksum list
         shell: pwsh
@@ -166,6 +187,98 @@ jobs:
           $lines | Set-Content -LiteralPath $checksumPath -Encoding ascii
           Get-Content -LiteralPath $checksumPath
 
+      - name: Scan Windows release files with Microsoft Defender
+        shell: pwsh
+        run: |
+          function Get-Sha256([string]$Path) {
+            $stream = [System.IO.File]::OpenRead($Path)
+            try {
+              $sha = [System.Security.Cryptography.SHA256]::Create()
+              try {
+                $hash = $sha.ComputeHash($stream)
+                return (($hash | ForEach-Object { $_.ToString("x2") }) -join "")
+              }
+              finally {
+                $sha.Dispose()
+              }
+            }
+            finally {
+              $stream.Dispose()
+            }
+          }
+
+          function Get-MpCmdRunPath {
+            $candidates = @()
+            if ($env:ProgramData) {
+              $platform = Join-Path $env:ProgramData 'Microsoft\Windows Defender\Platform'
+              $candidates += Get-ChildItem -LiteralPath $platform -Filter MpCmdRun.exe -Recurse -ErrorAction SilentlyContinue |
+                Sort-Object LastWriteTime -Descending |
+                ForEach-Object { $_.FullName }
+            }
+            if ($env:ProgramFiles) {
+              $candidates += Join-Path $env:ProgramFiles 'Windows Defender\MpCmdRun.exe'
+            }
+            $command = Get-Command MpCmdRun.exe -ErrorAction SilentlyContinue
+            if ($command) {
+              $candidates += $command.Source
+            }
+
+            foreach ($candidate in $candidates) {
+              if ($candidate -and (Test-Path -LiteralPath $candidate -PathType Leaf)) {
+                return $candidate
+              }
+            }
+            throw "MpCmdRun.exe was not found."
+          }
+
+          $mpCmd = Get-MpCmdRunPath
+          $targets = Get-ChildItem -LiteralPath dist -File |
+            Where-Object {
+              $_.Name -match '^Avelune-Enhance-.+-(Setup|Portable)-x64[.]exe$' -or
+              $_.Name -match '^Avelune-Enhance-.+-Setup-x64[.]exe[.]blockmap$' -or
+              $_.Name -eq 'rc.yml' -or
+              $_.Name -eq 'SHA256SUMS.txt'
+            } |
+            Sort-Object Name
+
+          if (@($targets).Count -lt 5) {
+            throw "Expected Setup, Portable, blockmap, rc.yml and SHA256SUMS.txt before Defender scan; found $(@($targets).Count)."
+          }
+
+          $signatureUpdateOutput = & $mpCmd -SignatureUpdate 2>&1
+          $signatureUpdateExitCode = $LASTEXITCODE
+
+          $scanResults = foreach ($file in $targets) {
+            $scanOutput = & $mpCmd -Scan -ScanType 3 -File $file.FullName -DisableRemediation 2>&1
+            $scanExitCode = $LASTEXITCODE
+            [pscustomobject]@{
+              Name = $file.Name
+              Sha256 = Get-Sha256 $file.FullName
+              ExitCode = $scanExitCode
+              Passed = $scanExitCode -eq 0
+              Output = (($scanOutput | Select-Object -Last 12) -join "`n")
+            }
+          }
+
+          $report = [ordered]@{
+            Scanner = 'Microsoft Defender'
+            ScannerPath = $mpCmd
+            GeneratedAtUtc = [DateTime]::UtcNow.ToString('o')
+            SignatureUpdateExitCode = $signatureUpdateExitCode
+            SignatureUpdateOutput = (($signatureUpdateOutput | Select-Object -Last 12) -join "`n")
+            Files = @($scanResults)
+          }
+
+          $reportPath = Join-Path $PWD 'dist\RC6-DEFENDER-SCAN.json'
+          $report | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $reportPath -Encoding utf8
+
+          $failed = @($scanResults | Where-Object { -not $_.Passed })
+          if ($failed.Count -gt 0) {
+            throw "Microsoft Defender scan failed for: $((@($failed | ForEach-Object { $_.Name })) -join ', ')"
+          }
+
+          Write-Host "[PASS] Microsoft Defender scanned $(@($scanResults).Count) release file(s)."
+
       - name: Upload unsigned Windows build artifact
         id: upload-unsigned-artifact
         uses: actions/upload-artifact@v7
@@ -179,6 +292,7 @@ jobs:
             dist/Avelune-Enhance-*-Setup-x64.exe.blockmap
             dist/rc.yml
             dist/SHA256SUMS.txt
+            dist/RC6-DEFENDER-SCAN.json
 
       - name: Publish GitHub Release assets
         if: startsWith(github.ref, 'refs/tags/v')

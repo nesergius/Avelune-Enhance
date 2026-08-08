@@ -38,5 +38,10 @@ test("tagged Windows builds publish downloadable release assets", () => {
   assert.match(workflow, /--target \$env:GITHUB_SHA/);
   assert.match(workflow, /Avelune-Enhance-\.\+\-\(Setup\|Portable\)-x64/);
   assert.match(workflow, /SHA256SUMS\.txt/);
+  assert.match(workflow, /WIN_CSC_LINK/);
+  assert.match(workflow, /WIN_CSC_KEY_PASSWORD/);
+  assert.match(workflow, /Required Authenticode signature is not valid/);
+  assert.match(workflow, /Scan Windows release files with Microsoft Defender/);
+  assert.match(workflow, /RC6-DEFENDER-SCAN\.json/);
   assert.match(workflow, /contents: write/);
 });
