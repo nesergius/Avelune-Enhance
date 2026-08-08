@@ -16,6 +16,7 @@ const modelFetcher = read("tools", "fetch-official-models.ps1");
 const builder = read("tools", "build-rc6-release.ps1");
 const pkg = JSON.parse(read("package.json"));
 const readme = read("README.md");
+const readmeRu = read("README.ru.md");
 const releaseNotes = read("RC6-RELEASE-NOTES.md");
 const implementationStatus = read("RC6-IMPLEMENTATION-STATUS.md");
 
@@ -55,15 +56,20 @@ test("RC6 removes the discarded region-preview workflow completely", () => {
   assert.doesNotMatch(renderer, /previewCacheKey|startRegionPreview|regionPreview/);
   assert.doesNotMatch(constants, /PREVIEW_REGION/);
   assert.doesNotMatch(main, /CHANNELS\.PREVIEW_REGION/);
-  for (const doc of [readme, releaseNotes, implementationStatus]) {
+  for (const doc of [readme, readmeRu, releaseNotes, implementationStatus]) {
     assert.doesNotMatch(doc, /Быстрый preview фрагмента|preview выбранного фрагмента|до 512×512|fragment-preview workflow/);
   }
 });
 
-test("public README advertises only available local restoration paths", () => {
-  assert.match(readme, /English Summary/);
+test("public README is English-first and advertises only available local restoration paths", () => {
+  assert.match(readme, /Avelune Enhance is a local Windows AI image enhancement and restoration studio/);
+  assert.match(readme, /RC6 Highlights/);
   assert.match(readme, /Adaptive Before\/After viewer/);
   assert.match(readme, /GitHub Releases/);
+  assert.match(readme, /Russian version/);
+  assert.doesNotMatch(readme, /Основные возможности RC6|Честные ограничения RC6|Готовые Windows-файлы/);
+  assert.match(readmeRu, /Основные возможности RC6/);
+  assert.match(readmeRu, /English version/);
   assert.doesNotMatch(readme, /OpenAI GPT Image|api\.openai\.com|облачный профиль|cloud restoration profile/);
 });
 
