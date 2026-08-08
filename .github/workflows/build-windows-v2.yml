@@ -210,6 +210,12 @@ jobs:
               --notes-file RC6-RELEASE-NOTES.md `
               --prerelease
           }
+          else {
+            gh release edit $tag `
+              --title "Avelune Enhance $tag" `
+              --notes-file RC6-RELEASE-NOTES.md `
+              --prerelease
+          }
 
           gh release upload $tag @assets --clobber
 

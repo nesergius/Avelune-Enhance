@@ -2,6 +2,16 @@
 
 RC6 переводит Avelune от преимущественно интерфейсного обновления к функциональному релизу качества и производительности.
 
+## English summary
+
+RC6 turns Avelune Enhance into a local Windows AI image enhancement and restoration release focused on practical quality, transparent profiles and repeatable QA.
+
+- 11 explainable profiles based on 6 verified official NCNN models plus optional local Photo Restore Pro/Ultra packages.
+- Local Auto Profile analyzes image signals and available VRAM before recommending a processing path.
+- The old separate fragment preview is not part of the public RC6 UI; result comparison now uses one adaptive Before/After workspace.
+- Setup, Portable, update metadata and SHA-256 checksums are published through GitHub Releases.
+- Public stable distribution still requires Authenticode signing and final antivirus verification.
+
 ## Новое
 
 1. Шесть проверяемых официальных NCNN-моделей и одиннадцать прозрачных профилей.

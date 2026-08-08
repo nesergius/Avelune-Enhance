@@ -33,6 +33,7 @@ test("tagged Windows builds publish downloadable release assets", () => {
   assert.match(workflow, /startsWith\(github\.ref, 'refs\/tags\/v'\)/);
   assert.match(workflow, /Publish GitHub Release assets/);
   assert.match(workflow, /gh release create/);
+  assert.match(workflow, /gh release edit/);
   assert.match(workflow, /gh release upload/);
   assert.match(workflow, /Avelune-Enhance-\.\+\-\(Setup\|Portable\)-x64/);
   assert.match(workflow, /SHA256SUMS\.txt/);
