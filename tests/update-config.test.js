@@ -25,5 +25,5 @@ test("Updater does not use setFeedURL and is gated for RC and Portable builds", 
   assert.match(updater, /PORTABLE_EXECUTABLE_DIR/);
   assert.match(updater, /AVELUNE_ENABLE_RC_UPDATES/);
   assert.match(updater, /channel = prerelease \? "rc" : "latest"/);
-  assert.match(main, /initializeUpdater\(\{ app, logLine \}\)/);
+  assert.match(main, /initializeUpdater\(\{\s*app\s*,\s*logLine\s*\}\)/);
 });

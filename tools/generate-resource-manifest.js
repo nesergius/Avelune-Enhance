@@ -8,6 +8,7 @@ const path = require("node:path");
 const projectRoot = path.resolve(__dirname, "..");
 const resourcesRoot = path.join(projectRoot, "resources");
 const outputPath = path.join(resourcesRoot, "resource-manifest.json");
+const runtimeMirrorPath = path.join(projectRoot, "src", "resource-integrity.json");
 
 const roots = [
   { directory: path.join(resourcesRoot, "win", "bin"), role: "native-runtime" },
@@ -56,7 +57,7 @@ files.sort((a, b) => a.path.localeCompare(b.path, "en"));
 const manifest = {
   schemaVersion: 1,
   product: "Avelune Enhance",
-  candidate: "2.0.0 RC4 preparation",
+  candidate: "2.0.0 RC6",
   hashAlgorithm: "SHA-256",
   deterministic: true,
   files,
@@ -64,5 +65,17 @@ const manifest = {
 
 fs.mkdirSync(resourcesRoot, { recursive: true });
 fs.writeFileSync(outputPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+
+// Keep the source mirror synchronized for audits and backwards-compatible
+// tooling. Runtime verification reads resource-manifest.json from
+// process.resourcesPath, so this mirror can never become the packaged source
+// of truth again.
+const runtimeMirror = Object.fromEntries(files.map((record) => [
+  record.path.replace(/^resources\//, ""),
+  record.sha256,
+]));
+fs.writeFileSync(runtimeMirrorPath, `${JSON.stringify(runtimeMirror, null, 2)}\n`, "utf8");
+
 console.log(`[PASS] Resource manifest written: ${outputPath}`);
+console.log(`[PASS] Runtime integrity mirror written: ${runtimeMirrorPath}`);
 console.log(`[PASS] Recorded files: ${files.length}`);

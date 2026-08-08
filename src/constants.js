@@ -24,7 +24,16 @@ const CHANNELS = Object.freeze({
   PASTE_IMAGE_SAVE_ERROR: "Clipboard Image save failed",
   GET_SYSTEM_INFO: "avelune:get-system-info",
   GET_APP_VERSION: "avelune:get-app-version",
-  GET_DIAGNOSTICS: "avelune:get-diagnostics"
+  GET_DIAGNOSTICS: "avelune:get-diagnostics",
+  GET_IMAGE_PREVIEW: "avelune:get-image-preview",
+  SCAN_BATCH_FOLDER: "avelune:scan-batch-folder",
+  PAUSE_BATCH: "avelune:pause-batch",
+  RESUME_BATCH: "avelune:resume-batch",
+  BATCH_ITEM_EVENT: "avelune:batch-item-event",
+  RUN_GPU_BENCHMARK: "avelune:run-gpu-benchmark",
+  GET_QUEUE_STATUS: "avelune:get-queue-status",
+  GET_CLOUD_SETTINGS: "avelune:get-cloud-settings",
+  SAVE_CLOUD_SETTINGS: "avelune:save-cloud-settings"
 });
 
 const SEND_CHANNELS = new Set([
@@ -34,7 +43,9 @@ const SEND_CHANNELS = new Set([
   CHANNELS.OPEN_FOLDER,
   CHANNELS.GET_MODELS_LIST,
   CHANNELS.STOP,
-  CHANNELS.PASTE_IMAGE
+  CHANNELS.PASTE_IMAGE,
+  CHANNELS.PAUSE_BATCH,
+  CHANNELS.RESUME_BATCH
 ]);
 
 const INVOKE_CHANNELS = new Set([
@@ -43,7 +54,13 @@ const INVOKE_CHANNELS = new Set([
   CHANNELS.SELECT_CUSTOM_MODEL_FOLDER,
   CHANNELS.GET_SYSTEM_INFO,
   CHANNELS.GET_APP_VERSION,
-  CHANNELS.GET_DIAGNOSTICS
+  CHANNELS.GET_DIAGNOSTICS,
+  CHANNELS.GET_IMAGE_PREVIEW,
+  CHANNELS.SCAN_BATCH_FOLDER,
+  CHANNELS.RUN_GPU_BENCHMARK,
+  CHANNELS.GET_QUEUE_STATUS,
+  CHANNELS.GET_CLOUD_SETTINGS,
+  CHANNELS.SAVE_CLOUD_SETTINGS
 ]);
 
 const RECEIVE_CHANNELS = new Set([
@@ -57,21 +74,22 @@ const RECEIVE_CHANNELS = new Set([
   CHANNELS.SCALING_AND_CONVERTING,
   CHANNELS.AVELUNE_ERROR,
   CHANNELS.PASTE_IMAGE_SAVE_SUCCESS,
-  CHANNELS.PASTE_IMAGE_SAVE_ERROR
+  CHANNELS.PASTE_IMAGE_SAVE_ERROR,
+  CHANNELS.BATCH_ITEM_EVENT
 ]);
 
 const BUILTIN_MODELS = Object.freeze([
   "avelune-standard-4x",
-  "avelune-lite-4x",
-  "high-fidelity-4x",
-  "remacri-4x",
-  "ultramix-balanced-4x",
-  "ultrasharp-4x",
-  "digital-art-4x"
+  "digital-art-4x",
+  "realesrnet-x4plus",
+  "realesr-animevideov3-x2",
+  "realesr-animevideov3-x3",
+  "realesr-animevideov3-x4"
 ]);
 
 const IMAGE_EXTENSIONS = Object.freeze(["png", "jpg", "jpeg", "jfif", "webp"]);
 const OUTPUT_FORMATS = Object.freeze(["png", "jpg", "jpeg", "webp"]);
+const JOB_TYPES = Object.freeze(["single", "double", "batch"]);
 
 module.exports = {
   CHANNELS,
@@ -80,5 +98,6 @@ module.exports = {
   RECEIVE_CHANNELS,
   BUILTIN_MODELS,
   IMAGE_EXTENSIONS,
-  OUTPUT_FORMATS
+  OUTPUT_FORMATS,
+  JOB_TYPES
 };

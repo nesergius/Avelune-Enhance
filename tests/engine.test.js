@@ -7,6 +7,7 @@ const {
   buildArgs,
   modelNativeScale,
   outputName,
+  availableOutputPath,
   sanitizeEngineDiagnostic,
   progressFromEngineChunk
 } = require("../src/engine");
@@ -43,4 +44,21 @@ test("native engine branding is cleaned from diagnostics", () => {
 test("progress parser emits percentages but suppresses native branding", () => {
   const updates = progressFromEngineChunk(Buffer.from("0,00%\r100.00%\r Upscayled Successfully!\n", "latin1"));
   assert.deepEqual(updates, ["0%\n", "100%\n"]);
+});
+
+
+test("non-overwrite processing selects a new filename instead of reusing stale output", () => {
+  const fs = require("node:fs");
+  const os = require("node:os");
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "avelune-output-name-"));
+  try {
+    const desired = path.join(dir, "result.png");
+    fs.writeFileSync(desired, "old");
+    assert.equal(availableOutputPath(desired, false), path.join(dir, "result_2.png"));
+    fs.writeFileSync(path.join(dir, "result_2.png"), "old2");
+    assert.equal(availableOutputPath(desired, false), path.join(dir, "result_3.png"));
+    assert.equal(availableOutputPath(desired, true), desired);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });

@@ -1,23 +1,15 @@
-# Политика безопасности
+# Security policy
 
-## Поддерживаемые версии
+## Supported candidate
 
-Исправления безопасности выпускаются для последней опубликованной основной версии Avelune Enhance.
+Security fixes are currently prepared for the newest Avelune Enhance release candidate only.
 
-## Сообщение об уязвимости
+## Reporting a vulnerability
 
-До публичного релиза владелец продукта обязан указать реальный приватный канал приёма отчётов — Security Advisory репозитория или отдельный адрес безопасности — на странице загрузки приложения. Не публикуйте детали потенциальной уязвимости до подтверждения исправления.
+Please report vulnerabilities privately through the security contact published at `https://avelune.sayqq.ru/` rather than opening a public issue with exploit details. Include the affected version, reproduction steps, expected impact and any relevant logs with personal file paths removed.
 
-В отчёте укажите версию приложения, Windows, GPU/драйвер, воспроизводимые шаги и влияние. Не прикладывайте личные изображения без необходимости.
+## Security properties
 
-## Архитектурные меры
+Avelune uses Electron context isolation, a sandboxed renderer, a strict Content Security Policy, whitelisted IPC channels, validated image/model paths, immutable job identifiers, packaged resource SHA-256 verification and disabled Node.js execution in the renderer. Images are processed locally.
 
-- Electron sandbox и context isolation;
-- отключённый Node.js в renderer;
-- строгая CSP без `unsafe-eval` и inline-скриптов;
-- типизированный preload API без универсального `send/invoke/on`;
-- проверка IPC sender;
-- запрет произвольной навигации, webview, загрузок и разрешений;
-- безопасные временные файлы и атомарная публикация результата;
-- SHA-256 проверка встроенных ресурсов;
-- последовательная очередь GPU-задач.
+Do not publish a candidate until the Windows binaries are Authenticode-signed, timestamped and scanned with Microsoft Defender plus an independent multi-engine service.

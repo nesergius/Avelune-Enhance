@@ -1,188 +1,52 @@
-# Avelune Enhance 2.0.0 RC4
+# Avelune Enhance 2.0.0 RC6
 
-Avelune Enhance is an open-source Windows desktop application for local,
-GPU-accelerated AI image enlargement and restoration.
+Avelune Enhance — локальное Windows-приложение для увеличения разрешения и восстановления изображений с Vulkan-ускорением. Пользовательские изображения обрабатываются на компьютере и не отправляются в облако.
 
-Image processing is performed locally on the user's computer.
+## Основные возможности RC6
 
-## Release status
+- **Восемь прозрачных профилей** на шести проверяемых наборах AI-весов: Natural, Restore Faithful, Art, Smooth, Anime Video, Fast, Detail+ и Balanced.
+- **Auto Profile** — локальный анализ насыщенности, контуров, шума, JPEG-блоков, яркости, разрешения и доступной VRAM с объяснением выбора.
+- **Быстрый preview фрагмента** — обработка реальным движком области до 512×512 с кэшем результатов и точным ползунком «До/После».
+- **Smart Queue** — очередь пакетной обработки с прогрессом каждого файла, паузой, продолжением, повтором ошибок, пропуском готовых результатов и сохранением состояния.
+- **Консервативное восстановление лиц** — дополнительный локальный второй проход, ориентированный на верность исходнику.
+- **Метаданные и цвет** — безопасное сохранение совместимых EXIF/XMP/IPTC/ICC-блоков для JPEG, PNG и расширенного WebP.
+- **GPU AutoTune** — локальный benchmark, подбор tile size и автоматическое восстановление после нехватки видеопамяти.
+- **Новый release-gate** — packaged smoke tests, пять конфигураций окна/DPI, скриншоты визуальной регрессии и сохранение собранных файлов в `QA-FAILED` при провале интерфейсной проверки.
+- **Обновлённый логотип** — прозрачные PNG-ресурсы для окна, панели задач, установщика и сайта.
 
-Avelune Enhance 2.0.0 RC4 is a release candidate intended for controlled
-testing on Windows 10 and Windows 11.
+## Честные ограничения RC6
 
-This build is not the final public release and is not currently signed with a
-trusted Authenticode certificate. Windows may display an Unknown Publisher or
-Microsoft Defender SmartScreen warning.
+- Режим лиц **не является GFPGAN** и не выполняет генеративную замену лица. Это консервативный второй проход через проверенную модель восстановления.
+- TIFF и полноценный 16-битный тракт пока не включены: текущий поставляемый NCNN-движок рассчитан на PNG/JPEG/WebP. Добавлять TIFF/16-bit без проверенного декодера и сквозного теста точности нельзя.
+- Сила восстановления лиц в RC6 управляет включением и характером второго прохода, но не выполняет пиксельное смешивание маски лица.
+- Официальные дополнительные модели загружаются и проверяются **во время подготовки/Windows-сборки**. В рабочем приложении сеть для моделей не используется.
 
-Verify the published SHA-256 checksums before running downloaded executables.
+## Поддерживаемые форматы
 
-## Features
+Вход: PNG, JPG/JPEG, JFIF, WebP.  
+Выход: PNG, JPG, WebP.
 
-- Local image processing
-- GPU acceleration through NCNN and Vulkan
-- Windows Setup and Portable distributions
-- Sequential GPU job queue
-- Job cancellation
-- Atomic output publishing
-- Input and output validation
-- Secure Electron configuration
-- Dedicated GPU memory diagnostics through DXGI
-- Resource integrity verification
-- Seven bundled model profiles
-- Custom model folder support
+## Быстрая Windows-сборка
 
-## Supported input formats
+1. Распакуйте исходники в новую папку.
+2. Запустите `BUILD_RC6_WINDOWS.cmd`.
+3. Дождитесь сообщения `[PASS] Open RC6-OUTPUT`.
 
-- PNG
-- JPG
-- JPEG
-- JFIF
-- WebP
+Скрипт сам:
 
-## Bundled model profiles
+- проверит и установит закреплённые официальные модели;
+- сформирует и проверит манифест ресурсов;
+- выполнит `npm ci` и полный набор тестов;
+- создаст Setup и Portable;
+- проверит запуск, движок, clipboard preview и интерфейс на нескольких разрешениях/DPI;
+- сохранит SHA-256 и отчёты.
 
-The application recognizes seven installed NCNN model profiles:
+Подробности: [BUILDING.md](BUILDING.md), [RC6-IMPLEMENTATION-STATUS.md](RC6-IMPLEMENTATION-STATUS.md), [MODEL_PROVENANCE.md](MODEL_PROVENANCE.md).
 
-- avelune-standard-4x
-- digital-art-4x
-- avelune-lite-4x
-- high-fidelity-4x
-- remacri-4x
-- ultramix-balanced-4x
-- ultrasharp-4x
+## Лицензии
 
-Two profiles have documented upstream mappings.
+Код Avelune Enhance распространяется по AGPL-3.0-only. Сторонние AI-модели и нативные компоненты сохраняют собственные лицензии и атрибуцию. См. `THIRD_PARTY_NOTICES.md`, `MODEL_PROVENANCE.md` и папку `licenses/`.
 
-Five compatibility profiles originate from an earlier project version. Their
-provenance records are being reviewed and must not be interpreted as original
-Avelune model developments.
 
-Avelune Enhance does not claim ownership of third-party AI models.
-
-See:
-
-- [Model provenance](MODEL_PROVENANCE.md)
-- [Third-party notices](THIRD_PARTY_NOTICES.md)
-
-## Native processing engine
-
-The packaged native processing engine is derived from the open-source
-`upscayl-ncnn` project.
-
-The repository and release source packages include:
-
-- the exact upstream commit;
-- initialized upstream submodules;
-- a source-level modification patch;
-- binary comparison evidence;
-- corresponding source;
-- rebuilding documentation.
-
-The reviewed Avelune modification changes user-facing string data without
-changing the executable code section.
-
-See:
-
-- [Native engine source information](NATIVE_ENGINE_SOURCE.md)
-- [Native engine source status](NATIVE_ENGINE_SOURCE.json)
-
-## RC4 Windows packaging
-
-RC4 is distributed as a standalone Windows application rather than as an
-`app.asar` patch for an existing Electron installation.
-
-The following values are generated from this source package:
-
-- Windows file metadata
-- Application version
-- Executable name
-- AppUserModelID
-- Setup package
-- Portable package
-- Update metadata
-
-The packaged DXGI diagnostic helper reports dedicated video memory directly
-from Windows. It is used for diagnostics and future automatic tile selection.
-
-## Security
-
-The application uses:
-
-- Electron context isolation;
-- disabled Node.js integration in the renderer;
-- a restricted preload API;
-- whitelisted IPC channels;
-- trusted renderer event validation;
-- strict Content Security Policy;
-- input path and model ID validation;
-- packaged resource integrity checks;
-- output dimension limits;
-- sequential GPU processing.
-
-Security reports should follow the instructions in:
-
-[SECURITY.md](SECURITY.md)
-
-## Privacy
-
-User images are processed locally.
-
-The application does not upload user images to an external processing service.
-Network access may be used for user-initiated update checks.
-
-See:
-
-[PRIVACY.md](PRIVACY.md)
-
-## Building from source
-
-Build requirements and instructions are available in:
-
-[BUILDING.md](BUILDING.md)
-
-The automated test suite can be started with:
-
-```bash
-npm test
-```
-
-The Windows release packages can be built with:
-
-```bash
-npm run release:win
-```
-
-## Code signing
-
-The current RC4 executables are unsigned.
-
-The intended release-signing and approval process is documented in:
-
-[CODE_SIGNING_POLICY.md](CODE_SIGNING_POLICY.md)
-
-Locally built binaries are not intended to be submitted as official signed
-public releases.
-
-## License
-
-The Avelune Enhance application source is licensed under the GNU Affero
-General Public License v3.0.
-
-See:
-
-[LICENSE](LICENSE)
-
-Third-party libraries, native components and AI models remain subject to their
-respective licenses and notices.
-
-## Release files
-
-Official preview and release artifacts are published through GitHub Releases.
-
-Each release should include:
-
-- Windows Setup
-- Portable Windows executable
-- Application Source Snapshot
-- Native Engine Corresponding Source
-- SHA-256 checksum list
+### Generative Restore
+Для экстремально повреждённых фото доступен отдельный добровольный облачный профиль OpenAI GPT Image. Локальные профили продолжают работать без отправки файлов в сеть.

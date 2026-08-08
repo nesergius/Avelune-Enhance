@@ -10,7 +10,8 @@ const {
   outputFormat,
   validateTargetDimensions,
   validateClipboardPayload,
-  safeModelId
+  safeModelId,
+  jobId
 } = require("../src/validators");
 
 test("sanitizes Windows-invalid output characters", () => {
@@ -36,9 +37,23 @@ test("rejects excessive output dimensions", () => {
 
 test("clipboard ignores attacker-controlled file name and validates base64", () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "avelune-test-"));
-  const parsed = validateClipboardPayload({ path: dir, name: "../../bad.png", extension: "png", encodedBuffer: Buffer.from("abc").toString("base64") });
+  const parsed = validateClipboardPayload({ requestId: "11111111-1111-4111-8111-111111111111", path: dir, name: "../../bad.png", extension: "png", encodedBuffer: Buffer.from("abc").toString("base64") });
   assert.equal(parsed.outputPath, dir);
   assert.equal(parsed.extension, "png");
   assert.equal(parsed.buffer.toString(), "abc");
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+
+test("validates UUID job identifiers", () => {
+  assert.equal(jobId("11111111-1111-4111-8111-111111111111"), "11111111-1111-4111-8111-111111111111");
+  assert.throws(() => jobId("not-a-job"), /неверный формат/);
+});
+
+test("clipboard accepts binary ArrayBuffer without base64 expansion", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "avelune-buffer-"));
+  const source = Uint8Array.from([1,2,3,4]);
+  const parsed = validateClipboardPayload({ requestId: "11111111-1111-4111-8111-111111111111", path: dir, extension: "png", buffer: source.buffer });
+  assert.deepEqual([...parsed.buffer], [1,2,3,4]);
   fs.rmSync(dir, { recursive: true, force: true });
 });

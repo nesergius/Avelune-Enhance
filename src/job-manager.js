@@ -10,15 +10,20 @@ class JobManager {
     this.running = false;
   }
 
-  enqueue(type, runner) {
+  enqueue(type, runner, { id = crypto.randomUUID(), metadata = null } = {}) {
     if (typeof runner !== "function") throw new TypeError("runner must be a function");
+    if (typeof id !== "string" || !/^[0-9a-f-]{36}$/i.test(id)) throw new Error("Некорректный идентификатор задачи.");
+    if (this.current?.id === id || this.queue.some((job) => job.id === id)) throw new Error("Задача с таким идентификатором уже существует.");
     if (this.queue.length >= this.maxQueued) throw new Error("Очередь задач заполнена.");
     const job = {
-      id: crypto.randomUUID(),
+      id,
       type,
       runner,
+      metadata,
       controller: new AbortController(),
       createdAt: Date.now(),
+      startedAt: null,
+      finishedAt: null,
       state: "queued"
     };
     this.queue.push(job);
@@ -26,28 +31,49 @@ class JobManager {
     return job.id;
   }
 
-  cancelCurrent() {
-    if (this.current) {
+  cancel(id, reason = "Задача отменена пользователем.") {
+    if (typeof id !== "string" || !id) return false;
+    if (this.current?.id === id) {
       this.current.state = "cancelling";
-      this.current.controller.abort(new Error("Задача отменена пользователем."));
-      return this.current.id;
+      this.current.controller.abort(new Error(reason));
+      return true;
     }
-    return null;
+    const index = this.queue.findIndex((job) => job.id === id);
+    if (index < 0) return false;
+    const [job] = this.queue.splice(index, 1);
+    job.state = "cancelled";
+    job.finishedAt = Date.now();
+    job.controller.abort(new Error(reason));
+    return true;
   }
 
-  clearQueued() {
-    const removed = this.queue.splice(0);
-    for (const job of removed) {
-      job.state = "cancelled";
-      job.controller.abort(new Error("Задача удалена из очереди."));
+  cancelAll(reason = "Работа приложения завершена.") {
+    let count = 0;
+    if (this.current && !this.current.controller.signal.aborted) {
+      this.current.state = "cancelling";
+      this.current.controller.abort(new Error(reason));
+      count += 1;
     }
-    return removed.length;
+    for (const job of this.queue.splice(0)) {
+      job.state = "cancelled";
+      job.finishedAt = Date.now();
+      job.controller.abort(new Error(reason));
+      count += 1;
+    }
+    return count;
   }
 
   getStatus() {
+    const compact = (job) => job ? {
+      id: job.id,
+      type: job.type,
+      state: job.state,
+      createdAt: job.createdAt,
+      startedAt: job.startedAt
+    } : null;
     return {
-      current: this.current ? { id: this.current.id, type: this.current.type, state: this.current.state } : null,
-      queued: this.queue.map((job) => ({ id: job.id, type: job.type, state: job.state }))
+      current: compact(this.current),
+      queued: this.queue.map(compact)
     };
   }
 
@@ -60,17 +86,20 @@ class JobManager {
         if (job.controller.signal.aborted) continue;
         this.current = job;
         job.state = "running";
+        job.startedAt = Date.now();
         try {
-          await job.runner({ id: job.id, signal: job.controller.signal });
+          await job.runner({ id: job.id, type: job.type, signal: job.controller.signal, metadata: job.metadata });
           job.state = job.controller.signal.aborted ? "cancelled" : "completed";
-        } catch (error) {
+        } catch {
           job.state = job.controller.signal.aborted ? "cancelled" : "failed";
         } finally {
+          job.finishedAt = Date.now();
           this.current = null;
         }
       }
     } finally {
       this.running = false;
+      if (this.queue.length > 0) void this.#drain();
     }
   }
 }

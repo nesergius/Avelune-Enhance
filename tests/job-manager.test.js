@@ -1,30 +1,6 @@
 "use strict";
-
-const test = require("node:test");
-const assert = require("node:assert/strict");
-const { JobManager } = require("../src/job-manager");
-
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-test("runs GPU jobs sequentially", async () => {
-  const manager = new JobManager();
-  const order = [];
-  manager.enqueue("a", async () => { order.push("a-start"); await wait(20); order.push("a-end"); });
-  manager.enqueue("b", async () => { order.push("b-start"); await wait(5); order.push("b-end"); });
-  await wait(80);
-  assert.deepEqual(order, ["a-start", "a-end", "b-start", "b-end"]);
-});
-
-test("cancels current job and clears queued jobs", async () => {
-  const manager = new JobManager();
-  let aborted = false;
-  manager.enqueue("a", async ({ signal }) => new Promise((resolve) => {
-    signal.addEventListener("abort", () => { aborted = true; resolve(); }, { once: true });
-  }));
-  manager.enqueue("b", async () => assert.fail("queued job should not run"));
-  await wait(10);
-  assert.ok(manager.cancelCurrent());
-  assert.equal(manager.clearQueued(), 1);
-  await wait(20);
-  assert.equal(aborted, true);
-});
+const test=require("node:test");const assert=require("node:assert/strict");const {JobManager}=require("../src/job-manager");
+const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
+test("runs GPU jobs sequentially",async()=>{const manager=new JobManager();const order=[];manager.enqueue("first",async()=>{order.push("a-start");await sleep(30);order.push("a-end");});manager.enqueue("second",async()=>{order.push("b-start");order.push("b-end");});await sleep(80);assert.deepEqual(order,["a-start","a-end","b-start","b-end"]);});
+test("cancels only the addressed current or queued job",async()=>{const manager=new JobManager();let firstAborted=false,secondRan=false,thirdRan=false;const first="11111111-1111-4111-8111-111111111111";const second="22222222-2222-4222-8222-222222222222";const third="33333333-3333-4333-8333-333333333333";manager.enqueue("single",({signal})=>new Promise(resolve=>{signal.addEventListener("abort",()=>{firstAborted=true;resolve();},{once:true});}),{id:first});manager.enqueue("batch",async()=>{secondRan=true;},{id:second});manager.enqueue("single",async()=>{thirdRan=true;},{id:third});await sleep(10);assert.equal(manager.cancel(second),true);assert.equal(manager.cancel(first),true);await sleep(30);assert.equal(firstAborted,true);assert.equal(secondRan,false);assert.equal(thirdRan,true);});
+test("rejects duplicate job identifiers",()=>{const manager=new JobManager();const id="44444444-4444-4444-8444-444444444444";manager.enqueue("single",async()=>{}, {id});assert.throws(()=>manager.enqueue("single",async()=>{}, {id}),/уже существует/);manager.cancelAll();});

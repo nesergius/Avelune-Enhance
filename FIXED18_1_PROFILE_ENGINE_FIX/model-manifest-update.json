@@ -1,0 +1,10 @@
+{
+  "models": [
+    "realesrgan-x4plus",
+    "realesrnet-x4plus",
+    "gfpgan",
+    "diffbir",
+    "animevideov3"
+  ],
+  "version": "FIXED18.1"
+}

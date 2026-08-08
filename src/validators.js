@@ -9,6 +9,7 @@ const MAX_RESULT_PIXELS = 134_217_728;
 const MAX_SIDE = 32_768;
 const MAX_BATCH_FILES = 10_000;
 const MAX_CLIPBOARD_BYTES = 64 * 1024 * 1024;
+const JOB_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -47,7 +48,14 @@ function existingDirectory(value, name = "Папка") {
 
 function ensureWritableDirectory(value, name = "Папка сохранения") {
   const result = existingDirectory(value, name);
-  fs.accessSync(result, fs.constants.W_OK);
+  const probe = path.join(result, `.avelune-write-test-${process.pid}-${Date.now()}-${Math.random().toString(16).slice(2)}.tmp`);
+  try {
+    fs.writeFileSync(probe, "ok", { encoding: "utf8", flag: "wx", mode: 0o600 });
+  } catch {
+    throw new Error(`${name}: невозможно создать файл в выбранной папке.`);
+  } finally {
+    fs.rmSync(probe, { force: true });
+  }
   return result;
 }
 
@@ -85,6 +93,12 @@ function integer(value, name, min, max) {
   return result;
 }
 
+function jobId(value) {
+  const result = stringValue(value, "Идентификатор задачи", 64);
+  assert(JOB_ID_PATTERN.test(result), "Идентификатор задачи имеет неверный формат.");
+  return result;
+}
+
 function booleanValue(value) {
   return value === true;
 }
@@ -104,7 +118,11 @@ function validateCommonPayload(payload) {
   const tileRaw = Number(payload.tileSize || 0);
   const tileSize = tileRaw === 0 ? 0 : integer(tileRaw, "Размер тайла", 16, 4096);
   const compression = integer(Number(payload.compression), "Качество", 0, 100);
+  const neuralRestore = booleanValue(payload.neuralRestore ?? payload.faceRecovery);
+  const generativeRestore = booleanValue(payload.generativeRestore);
+  const neuralRestoreStrength = integer(Number(payload.neuralRestoreStrength ?? payload.faceRecoveryStrength ?? (neuralRestore ? 70 : 0)), "Сила нейровосстановления", neuralRestore ? 20 : 0, 100);
   return {
+    requestId: jobId(payload.requestId),
     model: safeModelId(payload.model),
     saveImageAs: outputFormat(payload.saveImageAs),
     scale,
@@ -114,7 +132,12 @@ function validateCommonPayload(payload) {
     compression,
     gpuId: gpuId(payload.gpuId),
     ttaMode: booleanValue(payload.ttaMode),
-    overwrite: booleanValue(payload.overwrite)
+    overwrite: booleanValue(payload.overwrite),
+    copyMetadata: payload.copyMetadata !== false,
+    preserveColorProfile: payload.preserveColorProfile !== false,
+    neuralRestore,
+    neuralRestoreStrength,
+    generativeRestore
   };
 }
 
@@ -129,22 +152,43 @@ function validateSinglePayload(payload) {
 
 function validateBatchPayload(payload) {
   const common = validateCommonPayload(payload);
+  const batchFolderPath = existingDirectory(payload.batchFolderPath, "Исходная папка");
+  const resolvedRoot = path.resolve(batchFolderPath);
+  const rootPrefix = `${resolvedRoot}${path.sep}`;
+  const comparePath = (value) => process.platform === "win32" ? value.toLowerCase() : value;
+  const comparableRoot = comparePath(rootPrefix);
+  const files = Array.isArray(payload.files) ? payload.files.slice(0, MAX_BATCH_FILES).map((value) => {
+    const candidate = imagePath(value, "Файл очереди");
+    const resolvedCandidate = path.resolve(candidate);
+    assert(comparePath(resolvedCandidate).startsWith(comparableRoot), "Файл очереди находится вне исходной папки.");
+    return resolvedCandidate;
+  }) : [];
   return {
     ...common,
-    batchFolderPath: existingDirectory(payload.batchFolderPath, "Исходная папка"),
-    outputPath: ensureWritableDirectory(payload.outputPath)
+    batchFolderPath,
+    files,
+    outputPath: ensureWritableDirectory(payload.outputPath),
+    continueOnError: payload.continueOnError !== false,
+    skipExisting: payload.skipExisting !== false
   };
 }
 
 function validateClipboardPayload(payload) {
   assert(payload && typeof payload === "object", "Некорректные данные буфера обмена.");
-  const encodedBuffer = stringValue(payload.encodedBuffer, "Данные изображения", MAX_CLIPBOARD_BYTES * 2);
-  assert(/^[A-Za-z0-9+/=\r\n]+$/.test(encodedBuffer), "Буфер обмена содержит некорректные данные.");
-  const buffer = Buffer.from(encodedBuffer, "base64");
+  let buffer;
+  if (Buffer.isBuffer(payload.buffer)) buffer = Buffer.from(payload.buffer);
+  else if (payload.buffer instanceof ArrayBuffer) buffer = Buffer.from(payload.buffer);
+  else if (ArrayBuffer.isView(payload.buffer)) buffer = Buffer.from(payload.buffer.buffer, payload.buffer.byteOffset, payload.buffer.byteLength);
+  else if (typeof payload.encodedBuffer === "string") {
+    const encoded = stringValue(payload.encodedBuffer, "Данные изображения", MAX_CLIPBOARD_BYTES * 2);
+    assert(/^[A-Za-z0-9+/=\r\n]+$/.test(encoded), "Буфер обмена содержит некорректные данные.");
+    buffer = Buffer.from(encoded, "base64");
+  } else throw new Error("Данные изображения из буфера отсутствуют.");
   assert(buffer.length > 0 && buffer.length <= MAX_CLIPBOARD_BYTES, "Изображение из буфера слишком большое.");
+  const requestId = jobId(payload.requestId);
   const extension = outputFormat(payload.extension || "png");
   const outputPath = payload.path ? ensureWritableDirectory(payload.path) : null;
-  return { buffer, extension, outputPath };
+  return { requestId, buffer, extension, outputPath };
 }
 
 function validateTargetDimensions(width, height, payload) {
@@ -190,6 +234,7 @@ module.exports = {
   imagePath,
   sanitizeBaseName,
   safeModelId,
+  jobId,
   outputFormat,
   validateSinglePayload,
   validateBatchPayload,

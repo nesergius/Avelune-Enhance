@@ -4,19 +4,17 @@
 
 Use the included corresponding-source tree based on commit:
 
-$Commit
+`22774bc42e2bc3c785b5b585d213d960b1348ad5`
 
 All required submodules are included at their recorded commits.
 
 ## Requirements
 
-The upstream project uses CMake, a C/C++ compiler, OpenMP, and Vulkan
-development libraries or the Vulkan SDK. Refer to the included upstream
-README.md and CI files for environment-specific dependency versions.
+The upstream project uses CMake, a C/C++ compiler, OpenMP and Vulkan development libraries or the Vulkan SDK. Refer to the included upstream README and CI files for environment-specific dependencies.
 
 ## Build procedure
 
-From the modified source root:
+From the modified source root included in the archive (`source/`):
 
 ```text
 mkdir build
@@ -25,16 +23,11 @@ cmake ../src
 cmake --build . --config Release --parallel 2
 ```
 
-The build configuration and compiler can affect the final binary hash. The
-security review therefore verifies the supplied release executable separately
-against the official release and the deterministic binary transformation.
+Compiler and build-environment differences can change the final binary hash. The release review separately verifies the supplied executable against the official release and the deterministic binary transformation.
 
-After building, use the produced upscayl-bin.exe as the native backend and
-name the distributed copy velune-engine.exe.
+After building, use the produced `upscayl-bin.exe` as the native backend and name the distributed copy `avelune-engine.exe`.
 
 ## Applying the patch to a clean checkout
-
-For a clean checkout of the exact upstream commit:
 
 ```text
 git checkout 22774bc42e2bc3c785b5b585d213d960b1348ad5

@@ -1,3 +1,4 @@
+# Existing GitHub ignore rules
 # Node dependencies
 node_modules/
 
@@ -71,3 +72,15 @@ native-engine-source/runtime/
 build/
 coverage/
 .nyc_output/
+__pycache__/
+*.pyc
+
+# RC6 local source snapshot ignore rules
+*-OUTPUT/
+QA-REPORT-*/
+.build-tools/
+.electron-cache/
+.electron-builder-cache/
+.rc*-backup-*/
+.qa-*/
+.DS_Store

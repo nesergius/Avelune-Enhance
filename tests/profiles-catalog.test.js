@@ -1,0 +1,14 @@
+"use strict";
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const root = path.resolve(__dirname, "..");
+const app = fs.readFileSync(path.join(root,"renderer","out","assets","app.js"),"utf8");
+const html = fs.readFileSync(path.join(root,"renderer","out","index.html"),"utf8");
+const profiles = ["avelune-smart-restore","avelune-natural","avelune-game","avelune-neural-restore","avelune-photo-restore-ultra","avelune-generative-restore","avelune-restore","avelune-art","avelune-anime-video","avelune-fast","avelune-detail-plus"];
+test("RC6 exposes eleven unique processing profiles",()=>{ for (const id of profiles) assert.match(app,new RegExp(`"${id}"`)); });
+test("removed duplicate profile ids migrate through aliases",()=>{ assert.match(app,/"avelune-balanced": "avelune-natural"/); assert.match(app,/"avelune-smooth": "avelune-restore"/); });
+test("profile catalog distinguishes profiles from model weights",()=>{ assert.match(app,/status: "profile"/); assert.match(html,/11 профилей · 6 официальных моделей/); });
+test("profiles map only to verified engine model ids",()=>{ assert.doesNotMatch(app,/model: "(?:remacri|ultrasharp|ultramix|high-fidelity|avelune-lite)/); assert.match(app,/"avelune-detail-plus": \{ model: "avelune-standard-4x"/); assert.match(app,/"avelune-neural-restore": \{ model: "realesrnet-x4plus"/); });
+test("smart restore and game modes are routed by renderer analysis",()=>{ assert.match(app,/function resolveSmartProfile\(metrics, vramBytes\)/); assert.match(app,/"avelune-smart-restore": \{ model: "avelune-standard-4x"[\s\S]*smartRestore: true/); assert.match(app,/"avelune-game": \{ model: "avelune-standard-4x"/); assert.match(html,/data-profile-filter="smart"/); assert.match(html,/data-profile-filter="game"/); });

@@ -42,24 +42,24 @@ test("packaged native engine contains no previous product brand strings", () => 
   assert.equal(engine.toString("latin1").toLowerCase().includes("upscayl"), false);
 });
 
-test("RC4 includes a DXGI VRAM helper and verifies its integrity", () => {
+test("RC6 includes a DXGI VRAM helper and verifies its integrity", () => {
   assert.match(main, /avelune-gpu-info\.exe/);
   assert.match(main, /verifyPackagedResource/);
   assert.ok(fs.existsSync(path.join(root, "resources", "win", "bin", "avelune-gpu-info.exe")));
 });
 
 
-test("RC4 main process imports integrity verification and exposes a runtime probe", () => {
-  assert.match(main, /const \{ verifyPackagedResource \} = require\("\.\/integrity"\)/);
+test("RC6 main process imports integrity verification and exposes a runtime probe", () => {
+  assert.match(main, /const \{ verifyPackagedResource, verifyAllPackagedResources \} = require\("\.\/integrity"\)/);
   assert.match(main, /--avelune-runtime-probe=/);
-  assert.match(main, /electron: process\.versions\.electron/);
-  assert.match(main, /APP_DISPLAY_VERSION = "2\.0\.0 RC4"/);
+  assert.match(main, /electron:\s*process\.versions\.electron/);
+  assert.match(main, /APP_DISPLAY_VERSION = "2\.0\.0 RC6"/);
 });
 
-test("RC4 renderer and package metadata expose the same release candidate", () => {
+test("RC6 renderer and package metadata expose the same release candidate", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
-  assert.match(html, /v2\.0\.0 RC4/);
-  assert.equal(pkg.version, "2.0.0-rc.4");
-  assert.equal(pkg.buildVersion, "2.0.0.4");
+  assert.match(html, /v2\.0\.0 RC6/);
+  assert.equal(pkg.version, "2.0.0-rc.6");
+  assert.equal(pkg.buildVersion, "2.0.0.600");
   assert.equal(pkg.devDependencies.electron, "43.1.1");
 });

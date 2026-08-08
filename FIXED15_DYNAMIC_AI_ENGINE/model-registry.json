@@ -1,0 +1,32 @@
+{
+  "models": [
+    {
+      "id": "natural",
+      "backend": "Real-ESRGAN x4plus",
+      "quality": 90,
+      "speed": 85,
+      "vram": "2-4 GB"
+    },
+    {
+      "id": "restore",
+      "backend": "RealESRNet + GFPGAN",
+      "quality": 98,
+      "speed": 60,
+      "vram": "4-6 GB"
+    },
+    {
+      "id": "ultra",
+      "backend": "DiffBIR + GFPGAN",
+      "quality": 100,
+      "speed": 35,
+      "vram": "8+ GB"
+    },
+    {
+      "id": "art",
+      "backend": "AnimeVideo + Real-ESRGAN",
+      "quality": 95,
+      "speed": 75,
+      "vram": "4 GB"
+    }
+  ]
+}

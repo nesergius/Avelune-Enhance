@@ -1,0 +1,68 @@
+﻿{
+    "release":  "Real-ESRGAN NCNN official model set",
+    "sources":  [
+                    {
+                        "url":  "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip",
+                        "release":  "Real-ESRGAN v0.2.5.0 / NCNN 20220424",
+                        "archiveSha256":  "abc02804e17982a3be33675e4d471e91ea374e65b70167abc09e31acb412802d",
+                        "purpose":  "Current RealESRGAN and AnimeVideo-v3 models"
+                    },
+                    {
+                        "url":  "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-windows.zip",
+                        "release":  "Real-ESRGAN v0.2.3.0 / NCNN 20211212",
+                        "archiveSha256":  null,
+                        "purpose":  "RealESRNet x4plus fallback; exact model files are SHA-256 pinned"
+                    }
+                ],
+    "fetchedAt":  "2026-08-08T19:24:17.7942403Z",
+    "files":  [
+                  {
+                      "name":  "realesrnet-x4plus.bin",
+                      "bytes":  33424520,
+                      "sha256":  "26bccfcc82d9e8260c0c6b0dffb34ab297982740882d1f33c6d423f70b562c40",
+                      "source":  "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-windows.zip"
+                  },
+                  {
+                      "name":  "realesrnet-x4plus.param",
+                      "bytes":  116029,
+                      "sha256":  "35330ececcea33b6c397a72548e788d5d53becee4734c50b7fada36e89f10a86",
+                      "source":  "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-windows.zip"
+                  },
+                  {
+                      "name":  "realesr-animevideov3-x2.bin",
+                      "bytes":  1247368,
+                      "sha256":  "548a36f9c3f4ab8da56cd3b13badf23968bee207b396dad14d04b830e5f2ab2d",
+                      "source":  "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip"
+                  },
+                  {
+                      "name":  "realesr-animevideov3-x2.param",
+                      "bytes":  3173,
+                      "sha256":  "b88ff4f00ebf019a7fdac17fdd45a7fd3665d37509efc5baf2e4da2e24420a04",
+                      "source":  "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip"
+                  },
+                  {
+                      "name":  "realesr-animevideov3-x3.bin",
+                      "bytes":  1247368,
+                      "sha256":  "548a36f9c3f4ab8da56cd3b13badf23968bee207b396dad14d04b830e5f2ab2d",
+                      "source":  "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip"
+                  },
+                  {
+                      "name":  "realesr-animevideov3-x3.param",
+                      "bytes":  3173,
+                      "sha256":  "d1a5755008791d09b57e3425fc9dd0bd26b00fdf79c606210bc0e693f8230881",
+                      "source":  "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip"
+                  },
+                  {
+                      "name":  "realesr-animevideov3-x4.bin",
+                      "bytes":  1247368,
+                      "sha256":  "548a36f9c3f4ab8da56cd3b13badf23968bee207b396dad14d04b830e5f2ab2d",
+                      "source":  "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip"
+                  },
+                  {
+                      "name":  "realesr-animevideov3-x4.param",
+                      "bytes":  3077,
+                      "sha256":  "850a248e7c14c27e5bd8cf7265113a9441036a7db63963bb8aa5169d788a435e",
+                      "source":  "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip"
+                  }
+              ]
+}

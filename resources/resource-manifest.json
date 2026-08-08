@@ -1,22 +1,10 @@
 {
   "schemaVersion": 1,
   "product": "Avelune Enhance",
-  "candidate": "2.0.0 RC4 preparation",
+  "candidate": "2.0.0 RC6",
   "hashAlgorithm": "SHA-256",
   "deterministic": true,
   "files": [
-    {
-      "path": "resources/models/avelune-lite-4x.bin",
-      "role": "ai-model",
-      "bytes": 2435272,
-      "sha256": "85ee266b632a765a725425ba6a5620c088c8aa2939a03063b2d83b3462724cc1"
-    },
-    {
-      "path": "resources/models/avelune-lite-4x.param",
-      "role": "ai-model",
-      "bytes": 5019,
-      "sha256": "22174924330297357434ad21ed0af7f4b820008d2a502b492754d130d4142714"
-    },
     {
       "path": "resources/models/avelune-standard-4x.bin",
       "role": "ai-model",
@@ -42,52 +30,58 @@
       "sha256": "2b8fb6e0ae4d2d85704ca08c119a2f5ea40add4f2ecd512eb7f4cd44b6127ed4"
     },
     {
-      "path": "resources/models/high-fidelity-4x.bin",
+      "path": "resources/models/official-model-manifest.json",
+      "role": "ai-model",
+      "bytes": 4229,
+      "sha256": "18677bf9a2d8fca3d3f97f551be12df16a60b72983e20f2941b03bffe850b2c2"
+    },
+    {
+      "path": "resources/models/realesr-animevideov3-x2.bin",
+      "role": "ai-model",
+      "bytes": 1247368,
+      "sha256": "548a36f9c3f4ab8da56cd3b13badf23968bee207b396dad14d04b830e5f2ab2d"
+    },
+    {
+      "path": "resources/models/realesr-animevideov3-x2.param",
+      "role": "ai-model",
+      "bytes": 3173,
+      "sha256": "b88ff4f00ebf019a7fdac17fdd45a7fd3665d37509efc5baf2e4da2e24420a04"
+    },
+    {
+      "path": "resources/models/realesr-animevideov3-x3.bin",
+      "role": "ai-model",
+      "bytes": 1247368,
+      "sha256": "548a36f9c3f4ab8da56cd3b13badf23968bee207b396dad14d04b830e5f2ab2d"
+    },
+    {
+      "path": "resources/models/realesr-animevideov3-x3.param",
+      "role": "ai-model",
+      "bytes": 3173,
+      "sha256": "d1a5755008791d09b57e3425fc9dd0bd26b00fdf79c606210bc0e693f8230881"
+    },
+    {
+      "path": "resources/models/realesr-animevideov3-x4.bin",
+      "role": "ai-model",
+      "bytes": 1247368,
+      "sha256": "548a36f9c3f4ab8da56cd3b13badf23968bee207b396dad14d04b830e5f2ab2d"
+    },
+    {
+      "path": "resources/models/realesr-animevideov3-x4.param",
+      "role": "ai-model",
+      "bytes": 3077,
+      "sha256": "850a248e7c14c27e5bd8cf7265113a9441036a7db63963bb8aa5169d788a435e"
+    },
+    {
+      "path": "resources/models/realesrnet-x4plus.bin",
       "role": "ai-model",
       "bytes": 33424520,
-      "sha256": "8a135402b4f39286121b76abb47601a6b7b7e8d4f3e999a5aaa45ed277824fb4"
+      "sha256": "26bccfcc82d9e8260c0c6b0dffb34ab297982740882d1f33c6d423f70b562c40"
     },
     {
-      "path": "resources/models/high-fidelity-4x.param",
-      "role": "ai-model",
-      "bytes": 108039,
-      "sha256": "4576ed5c2fc5fa250d3c3d585ef02248f26abdfc1867088078f501fe71e5d61e"
-    },
-    {
-      "path": "resources/models/remacri-4x.bin",
-      "role": "ai-model",
-      "bytes": 33424520,
-      "sha256": "a43be595c0d743314c30b50fe7ef188be0c61cc55c46ce81adb79ba4b3c3fb7a"
-    },
-    {
-      "path": "resources/models/remacri-4x.param",
-      "role": "ai-model",
-      "bytes": 140295,
-      "sha256": "859ecba5b3592ecf3e76c93bed65e9f627b5236dd696aae5a84ecf8c93ab65ce"
-    },
-    {
-      "path": "resources/models/ultramix-balanced-4x.bin",
-      "role": "ai-model",
-      "bytes": 33424520,
-      "sha256": "171cae5968485d366b4fb575d232f98d117d94b766b15f22849cfccde40d2050"
-    },
-    {
-      "path": "resources/models/ultramix-balanced-4x.param",
-      "role": "ai-model",
-      "bytes": 140295,
-      "sha256": "859ecba5b3592ecf3e76c93bed65e9f627b5236dd696aae5a84ecf8c93ab65ce"
-    },
-    {
-      "path": "resources/models/ultrasharp-4x.bin",
-      "role": "ai-model",
-      "bytes": 33424520,
-      "sha256": "fb3e279d40d4cddb44db4e684d59e68d0aa39852c8cc14dc3f23ccc7e6eee9c1"
-    },
-    {
-      "path": "resources/models/ultrasharp-4x.param",
+      "path": "resources/models/realesrnet-x4plus.param",
       "role": "ai-model",
       "bytes": 116029,
-      "sha256": "0136ca83686809a8f17f7111f11b951e8db93610e24b7f4137c9ffe4dbc4a806"
+      "sha256": "35330ececcea33b6c397a72548e788d5d53becee4734c50b7fada36e89f10a86"
     },
     {
       "path": "resources/win/bin/avelune-engine.exe",

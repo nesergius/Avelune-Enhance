@@ -7,6 +7,7 @@ const path = require("node:path");
 
 const projectRoot = path.resolve(__dirname, "..");
 const manifestPath = path.join(projectRoot, "resources", "resource-manifest.json");
+const runtimeMirrorPath = path.join(projectRoot, "src", "resource-integrity.json");
 
 function fail(message) {
   console.error(`[FAIL] ${message}`);
@@ -89,6 +90,25 @@ for (const record of manifest.files) {
   const actualHash = sha256(fullPath);
   if (actualHash.toLowerCase() !== record.sha256.toLowerCase()) {
     fail(`SHA-256 mismatch: ${normalized}`);
+  }
+}
+
+
+const expectedRuntimeMirror = Object.fromEntries(manifest.files.map((record) => [
+  record.path.replaceAll("\\", "/").replace(/^resources\//, ""),
+  String(record.sha256 || "").toLowerCase(),
+]));
+let actualRuntimeMirror = null;
+try {
+  actualRuntimeMirror = JSON.parse(fs.readFileSync(runtimeMirrorPath, "utf8"));
+} catch (error) {
+  fail(`Runtime integrity mirror is missing or invalid: ${error.message}`);
+}
+if (actualRuntimeMirror) {
+  const expectedText = JSON.stringify(expectedRuntimeMirror);
+  const actualText = JSON.stringify(actualRuntimeMirror);
+  if (actualText !== expectedText) {
+    fail("Runtime integrity mirror does not match resources/resource-manifest.json. Run npm run manifest:resources before packaging.");
   }
 }
 

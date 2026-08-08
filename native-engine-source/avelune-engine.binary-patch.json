@@ -1,4 +1,4 @@
-﻿{
+{
     "SchemaVersion":  1,
     "Description":  "Deterministic transformation from the official Upscayl NCNN Windows binary to the tested Avelune RC3 engine binary.",
     "BaseFile":  "upscayl-bin.exe",
